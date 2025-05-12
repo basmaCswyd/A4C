@@ -1,0 +1,47 @@
+{% extends "admin/admin_base.html" %} {# Hérite de la base admin avec sidebar #}
+
+{% block admin_content %}
+    {# <h1 class="admin-title">Définir le Rendez-vous pour le Projet</h1> #}
+    {# Le titre est déjà dans admin_main_header via la variable 'title' passée par la route #}
+
+    <div class="form-container edit-user-form"> {# Réutiliser le style du formulaire d'édition user #}
+        <h4 class="mb-3">Projet : <strong>{{ project.title }}</strong></h4>
+        <p class="text-muted">Candidat : {{ project.applicant.username }}</p>
+        <hr>
+
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.appointment_date.label(class="form-label fw-bold") }}
+                {{ form.appointment_date(class="form-control form-control-lg" + (" is-invalid" if form.appointment_date.errors else "")) }}
+                {% if form.appointment_date.errors %}
+                    <div class="form-error">{% for error in form.appointment_date.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+                <div class="form-text">Sélectionnez la date et l'heure.</div>
+            </div>
+
+            <div class="form-group">
+                {{ form.appointment_location.label(class="form-label fw-bold") }}
+                {{ form.appointment_location(class="form-control" + (" is-invalid" if form.appointment_location.errors else "")) }}
+                {% if form.appointment_location.errors %}
+                    <div class="form-error">{% for error in form.appointment_location.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.appointment_notes.label(class="form-label fw-bold") }}
+                {{ form.appointment_notes(class="form-control" + (" is-invalid" if form.appointment_notes.errors else ""), rows="5") }}
+                {% if form.appointment_notes.errors %}
+                    <div class="form-error">{% for error in form.appointment_notes.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+                <div class="form-text">Ces notes apparaîtront sur la convocation. Rappelez que la fiche est obligatoire.</div>
+            </div>
+
+            <div class="form-actions">
+                {{ form.submit(class="button button-primary") }}
+                <a href="{{ url_for('main.admin_manage_projects') }}" class="button button-secondary">Annuler</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

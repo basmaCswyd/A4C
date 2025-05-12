@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Projets à Évaluer</h2>
+{% if projects %}
+<div class="list-group">
+    {% for project in projects %}
+    <a href="{{ url_for('main.evaluate_project_detail', project_id=project.id) }}" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ project.title }}</h5>
+            <small>{{ project.submission_date.strftime('%d-%m-%Y') }}</small>
+        </div>
+        <p class="mb-1">{{ project.description[:150] }}...</p>
+        <small>Soumis par: {{ project.applicant.username }}. Statut: <span class="badge 
+            {% if project.status == 'Soumis' %}bg-info
+            {% elif project.status == 'En évaluation' %}bg-warning
+            {% elif project.status == 'Approuvé' %}bg-success
+            {% elif project.status == 'Rejeté' %}bg-danger
+            {% else %}bg-secondary
+            {% endif %}">{{ project.status }}</span></small>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<p>Aucun projet n'est actuellement disponible pour évaluation.</p>
+{% endif %}
+{% endblock %}

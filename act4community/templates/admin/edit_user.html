@@ -1,0 +1,29 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_content %}
+    {# <div class="admin-section"> #}
+    {# <h1 class="admin-title"><i class="bi bi-person-gear"></i> Modifier l'utilisateur : <strong>{{ user.username }}</strong></h1> #}
+    <p class="text-muted mb-4">Email : {{ user.email }}</p>
+
+    <div class="form-container edit-user-form">
+        <form method="POST" action="">
+            <div class="form-group">
+                <label for="role" class="form-label">Attribuer un nouveau rôle :</label>
+                <select name="role" id="role" class="form-control form-control-lg">
+                    <option value="candidat" {% if user.role == 'candidat' %}selected{% endif %}>Candidat</option>
+                    <option value="membre_a4c" {% if user.role == 'membre_a4c' %}selected{% endif %}>Membre A4C</option>
+                    <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Administrateur</option>
+                </select>
+                 {% if user.role == 'admin' and users_admin_count <= 1 %}
+                    <div class="form-text text-danger mt-2">Attention : C'est le dernier administrateur. Changer son rôle peut bloquer l'accès admin.</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="button button-primary"><i class="bi bi-check-lg"></i> Sauvegarder</button>
+                <a href="{{ url_for('main.manage_users') }}" class="button button-secondary"><i class="bi bi-x-lg"></i> Annuler</a>
+            </div>
+        </form>
+    </div>
+    {# </div> fin admin-section #}
+{% endblock %}

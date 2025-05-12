@@ -1,0 +1,95 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_content %}
+    {# Le titre est géré par admin_base.html via la variable 'title' passée par la route #}
+    <p class="mb-3 lead">Liste complète des projets soumis. Approuvez, rejetez ou planifiez un rendez-vous pour les projets approuvés.</p>
+
+    {% if projects %}
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle styled-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Titre & Documents</th>
+                        <th>Candidat</th>
+                        <th>Soumis le</th>
+                        <th>Statut</th>
+                        <th>Budget (€)</th>
+                        <th>Localisation</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                    <tr>
+                        <td>{{ project.id }}</td>
+                        <td>
+                            <strong class="d-block mb-1">{{ project.title }}</strong>
+                            {% if project.documents %}
+                                {% for doc in project.documents %}
+                                   <a href="{{ url_for('main.uploaded_file', project_id_str=project.id, filename=doc.filename) }}" target="_blank" class="badge bg-secondary text-decoration-none me-1" title="{{ doc.filename }}">
+                                       <i class="bi bi-paperclip"></i> {{ doc.filename | truncate(20) }}
+                                   </a>
+                                {% endfor %}
+                            {% else %}
+                                <span class="badge bg-light text-dark">Aucun doc.</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                             <a href="{{ url_for('main.manage_users') }}#user-{{ project.applicant.id }}" title="Voir détails de l'utilisateur">
+                                 {{ project.applicant.username }}
+                             </a>
+                             <small class="d-block text-muted">{{ project.applicant.email }}</small>
+                         </td>
+                        <td>{{ project.submission_date.strftime('%d/%m/%y') }}</td>
+                        <td>
+                            <span class="badge fs-6 
+                                {% if project.status == 'Soumis' %} text-dark bg-info 
+                                {% elif project.status == 'En évaluation' %} text-dark bg-warning 
+                                {% elif project.status == 'Approuvé' %} bg-success 
+                                {% elif project.status == 'Rejeté' %} bg-danger 
+                                {% else %} bg-secondary 
+                                {% endif %}">
+                                {{ project.status }}
+                            </span>
+                        </td>
+                        <td class="text-end">{{ "{:,.2f} €".format(project.budget_estime) if project.budget_estime else '--' }}</td>
+                        <td>{{ project.localisation or '--' }}</td>
+                        <td class="actions-cell text-center"> {# Cellule pour les actions #}
+                            {% if project.status in ['Soumis', 'En évaluation'] %}
+                                <form action="{{ url_for('main.admin_approve_project', project_id=project.id) }}" method="POST" class="d-inline-block mb-1">
+                                    <button type="submit" class="button button-small button-success" title="Approuver le projet" onclick="return confirm('Confirmer l\'approbation de ce projet : {{ project.title }} ?')">
+                                       <i class="bi bi-check-lg"></i> <span class="d-none d-md-inline">Approuver</span>
+                                    </button>
+                                </form>
+                                <form action="{{ url_for('main.admin_reject_project', project_id=project.id) }}" method="POST" class="d-inline-block">
+                                     <button type="submit" class="button button-small button-delete" title="Rejeter le projet" onclick="return confirm('Confirmer le rejet de ce projet : {{ project.title }} ?')">
+                                       <i class="bi bi-x-lg"></i> <span class="d-none d-md-inline">Rejeter</span>
+                                    </button>
+                                </form>
+                            {% elif project.status == 'Approuvé' %}
+                                <a href="{{ url_for('main.admin_set_appointment', project_id=project.id) }}" class="button button-small button-primary-outline mb-1" title="Définir/Modifier le RDV">
+                                    <i class="bi bi-calendar-plus"></i> <span class="d-none d-md-inline">Rendez-vous</span>
+                                </a>
+                                {% if project.appointment_date %}
+                                <a href="{{ url_for('main.download_convocation_pdf', project_id=project.id) }}" class="button button-small button-info-outline" title="Voir/Télécharger Convocation">
+                                    <i class="bi bi-file-earmark-pdf"></i> <span class="d-none d-md-inline">Convocation</span>
+                                </a>
+                                {% endif %}
+                            {% else %} {# Projet Rejeté ou autre statut final #}
+                                <span class="text-muted fst-italic">Décision prise</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info mt-3" role="alert"> {# Remplacer par une classe custom si Bootstrap est enlevé #}
+      <i class="bi bi-info-circle-fill"></i> Aucun projet n'a été soumis ou n'est en attente de décision.
+    </div>
+    {% endif %}
+{% endblock %}

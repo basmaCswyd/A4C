@@ -1,0 +1,61 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_content %}
+    <div class="dashboard-header-intro">
+        <p class="admin-welcome">Bienvenue, <strong>{{ current_user.username }}</strong> ! Voici un aperçu de l'activité de la plateforme.</p>
+    </div>
+
+    <div class="key-indicators-section">
+        <h2 class="section-heading">Indicateurs Clés</h2>
+        <div class="indicators-grid">
+            <div class="indicator-card indicator-purple">
+                <div class="indicator-value">{{ total_projects }}</div>
+                <div class="indicator-label">Projets Totaux</div>
+                <div class="indicator-icon"><i class="bi bi-collection"></i></div>
+            </div>
+            <div class="indicator-card indicator-orange">
+                <div class="indicator-value">{{ pending_count }}</div>
+                <div class="indicator-label">Projets en Attente</div>
+                 <div class="indicator-icon"><i class="bi bi-hourglass-split"></i></div>
+            </div>
+            <div class="indicator-card indicator-green">
+                <div class="indicator-value">{{ approved_projects }}</div>
+                <div class="indicator-label">Projets Approuvés</div>
+                 <div class="indicator-icon"><i class="bi bi-check2-circle"></i></div>
+            </div>
+            <div class="indicator-card indicator-blue">
+                <div class="indicator-value">{{ total_users }}</div>
+                <div class="indicator-label">Utilisateurs Inscrits</div>
+                 <div class="indicator-icon"><i class="bi bi-people"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="charts-section">
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>Soumissions de Projets (Placeholder)</h3>
+                <select class="chart-timespan-select">
+                    <option>6 derniers mois</option>
+                    <option>Année en cours</option>
+                </select>
+            </div>
+            <div class="chart-placeholder">
+                <i class="bi bi-bar-chart-steps" style="font-size: 3rem; color: #ccc;"></i>
+                <p>Graphique des soumissions mensuelles ici</p>
+            </div>
+        </div>
+        <div class="chart-container performance-chart-placeholder">
+             <div class="chart-header">
+                <h3>Performance Évaluations (Placeholder)</h3>
+                 <select class="chart-timespan-select">
+                    <option>Total</option>
+                </select>
+            </div>
+            <div class="chart-placeholder">
+                <i class="bi bi-pie-chart-fill" style="font-size: 3rem; color: #ccc;"></i>
+                 <p>Graphique de performance ici</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

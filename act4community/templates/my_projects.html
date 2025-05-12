@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="page-title">Suivi de Vos Projets</h1>
+
+{% if projects %}
+    {% for project in projects %}
+        <div class="project-tracking-card">
+            
+            <div class="status-tracker-header">
+                <h2>Statut de la demande : <strong>{{ project.title }}</strong></h2>
+            </div>
+            <div class="status-tracker-body">
+                {% set steps = {'Soumis': 1, 'En évaluation': 2, 'Approuvé': 3, 'Rejeté': 3} %}
+                {% set current_step_value = steps.get(project.status, 0) %}
+                {% set is_rejected = project.status == 'Rejeté' %}
+                {% set is_approved = project.status == 'Approuvé' %}
+
+                <div class="status-steps-container">
+                    <div class="status-step {{ 'completed' if current_step_value > 1 and not is_rejected else 'active' if current_step_value == 1 else '' }}">
+                        <div class="step-node">
+                            <i class="bi {{ 'bi-check-circle-fill' if current_step_value > 1 and not is_rejected else 'bi-1-circle-fill' }}"></i>
+                        </div>
+                        <div class="step-label">Soumission</div>
+                    </div>
+                    <div class="step-connector {{ 'completed' if current_step_value > 1 and not is_rejected else '' }}"></div>
+                    
+                    <div class="status-step {{ 'completed' if current_step_value > 2 and not is_rejected else 'active' if current_step_value == 2 else '' }}">
+                        <div class="step-node">
+                             <i class="bi {{ 'bi-check-circle-fill' if current_step_value > 2 and not is_rejected else 'bi-2-circle-fill' }}"></i>
+                        </div>
+                        <div class="step-label">Évaluation</div>
+                    </div>
+                    <div class="step-connector {{ 'completed' if current_step_value > 2 and not is_rejected else '' }} {{ 'rejected' if is_rejected }}"></div>
+
+                    <div class="status-step {{ 'active' if current_step_value == 3 else '' }} {{ 'rejected' if is_rejected else 'approved' if is_approved else '' }}">
+                        <div class="step-node">
+                            <i class="bi {{ 'bi-x-circle-fill text-danger' if is_rejected else 'bi-check-circle-fill text-success' if is_approved else 'bi-3-circle-fill' }}"></i>
+                        </div>
+                        <div class="step-label">{{ 'Décision Finale' }}</div>
+                    </div>
+                </div>
+
+                 {% if is_rejected %}
+                    <p class="status-message message-danger">
+                        <i class="bi bi-exclamation-octagon-fill"></i> Votre projet n'a pas été retenu. N'hésitez pas à nous contacter pour plus de détails ou pour discuter d'une nouvelle soumission.
+                    </p>
+                 {% elif is_approved %}
+                     <p class="status-message message-success">
+                        <i class="bi bi-hand-thumbs-up-fill"></i> Félicitations ! Votre projet a été approuvé.
+                        {% if project.appointment_date %}
+                            <br>Un rendez-vous a été fixé. Veuillez télécharger et imprimer votre convocation :<br>
+                            <a href="{{ url_for('main.download_convocation_pdf', project_id=project.id) }}" class="button button-small button-download-convocation mt-2">
+                                <i class="bi bi-download"></i> Télécharger votre Convocation
+                            </a>
+                        {% else %}
+                            <br>Nous vous contacterons très prochainement pour les prochaines étapes, y compris la planification d'un rendez-vous.
+                        {% endif %}
+                     </p>
+                 {% elif project.status == 'En évaluation' %}
+                     <p class="status-message message-info">
+                        <i class="bi bi-hourglass-split"></i> Votre projet est actuellement en cours d'évaluation par nos équipes. Nous vous tiendrons informé.
+                     </p>
+                 {% elif project.status == 'Soumis' %}
+                      <p class="status-message message-info">
+                        <i class="bi bi-file-earmark-check-fill"></i> Votre projet a bien été soumis et sera bientôt pris en charge pour évaluation.
+                     </p>
+                 {% endif %}
+            </div>
+
+            <div class="project-details-section">
+                <h3 class="details-title">Détails de Votre Projet</h3>
+                <div class="details-grid">
+                    <div class="detail-item"><span class="detail-label">Titre :</span><span class="detail-value">{{ project.title }}</span></div>
+                    <div class="detail-item wide"><span class="detail-label">Description :</span><span class="detail-value preserve-whitespace">{{ project.description }}</span></div>
+                    <div class="detail-item"><span class="detail-label">Date Soumission :</span><span class="detail-value">{{ project.submission_date.strftime('%d %B %Y') }}</span></div>
+                    <div class="detail-item"><span class="detail-label">Budget Estimé :</span><span class="detail-value">{{ "{:,.2f} €".format(project.budget_estime) if project.budget_estime else 'Non spécifié' }}</span></div>
+                    <div class="detail-item"><span class="detail-label">Localisation :</span><span class="detail-value">{{ project.localisation or 'Non spécifiée' }}</span></div>
+                    <div class="detail-item"><span class="detail-label">Début Prévu :</span><span class="detail-value">{{ project.date_debut_prevue.strftime('%d/%m/%Y') if project.date_debut_prevue else 'Non spécifiée' }}</span></div>
+                    <div class="detail-item"><span class="detail-label">Durée Estimée :</span><span class="detail-value">{{ project.duree_estimee or 'Non spécifiée' }}</span></div>
+                    <div class="detail-item wide"><span class="detail-label">Objectifs Spécifiques :</span><span class="detail-value preserve-whitespace">{{ project.objectifs_specifiques if project.objectifs_specifiques else 'Non spécifiés' }}</span></div>
+                    <div class="detail-item wide"><span class="detail-label">Documents Joints :</span>
+                        <span class="detail-value">
+                        {% if project.documents %}
+                            {% for doc in project.documents %}
+                                <a href="{{ url_for('main.uploaded_file', project_id_str=project.id, filename=doc.filename) }}" target="_blank" class="document-link" title="{{ doc.filename }}">
+                                    <i class="bi bi-file-earmark-arrow-down-fill"></i> {{ doc.filename | truncate(30) }}
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted">Aucun document.</span>
+                        {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        {% if not loop.last %}
+            <hr class="project-separator">
+        {% endif %}
+    {% endfor %}
+
+{% else %}
+    <div class="no-projects-message">
+        <i class="bi bi-folder-x big-icon"></i>
+        <h4>Vous n'avez soumis aucun projet pour le moment.</h4>
+        <p>Prêt à donner vie à vos idées ? Soumettez votre projet dès maintenant !</p>
+        <a href="{{ url_for('main.submit_project') }}" class="button button-success button-lg">
+            <i class="bi bi-plus-circle-fill"></i> Soumettre votre premier projet
+        </a>
+    </div>
+{% endif %}
+
+<div class="help-section-container">
+    <h4>Besoin d'aide ou des questions ?</h4>
+    <p>Notre équipe est disponible pour vous accompagner. N'hésitez pas à nous contacter.</p>
+    {# REVENU AU LIEN mailto: #}
+    <a href="mailto:VOTRE_ADRESSE_SUPPORT@example.com?subject=Demande d'aide concernant mon projet - Plateforme Act4Community" class="button button-secondary">
+        <i class="bi bi-envelope-fill"></i> Contacter le Support
+    </a>
+</div>
+
+{% endblock %}

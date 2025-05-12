@@ -1,0 +1,59 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_content %}
+    {# <div class="admin-section"> #}
+    {# <h1 class="admin-title"><i class="bi bi-bar-chart-line-fill"></i> Statististiques et Rapports</h1> #}
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-journal-text"></i></div>
+            <div class="stat-value">{{ total_projects }}</div>
+            <div class="stat-label">Nombre Total de Projets</div>
+        </div>
+        <div class="stat-card">
+             <div class="stat-icon"><i class="bi bi-star-half"></i></div>
+            <div class="stat-value">{{ average_score }}</div>
+            <div class="stat-label">Score Moyen Évaluation</div>
+        </div>
+    </div>
+
+    <div class="report-section">
+        <h3 class="section-title">Projets par Statut</h3>
+        {% if status_counts %}
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="table styled-table">
+                    <thead>
+                        <tr>
+                            <th>Statut</th>
+                            <th class="text-center">Nombre</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set all_statuses = ['Soumis', 'En évaluation', 'Approuvé', 'Rejeté'] %}
+                        {% for status in all_statuses %}
+                        <tr>
+                            <td>
+                                <span class="badge fs-6 
+                                    {% if status == 'Soumis' %} text-dark bg-info 
+                                    {% elif status == 'En évaluation' %} text-dark bg-warning 
+                                    {% elif status == 'Approuvé' %} bg-success 
+                                    {% elif status == 'Rejeté' %} bg-danger 
+                                    {% else %} bg-secondary 
+                                    {% endif %}">
+                                    {{ status }}
+                                </span>
+                            </td>
+                            <td class="text-center">{{ status_counts.get(status, 0) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <p class="no-data-message">Aucune donnée de statut de projet disponible.</p>
+        {% endif %}
+    </div>
+    {# </div> fin admin-section #}
+{% endblock %}

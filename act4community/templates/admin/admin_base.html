@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Admin Act4Community</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    {# <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}"> #}
+</head>
+<body class="admin-body">
+
+    <div class="admin-layout-container">
+        {# --- SIDEBAR DE NAVIGATION --- #}
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <a href="{{ url_for('main.admin_dashboard') }}" class="sidebar-logo-link">
+                    <img src="{{ url_for('static', filename='images/a4c_logo.png') }}" alt="Act4Community Logo" class="sidebar-logo">
+                    <span class="sidebar-title-text">Admin Panel</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="{{ 'active' if request.endpoint == 'main.admin_dashboard' else '' }}">
+                        <a href="{{ url_for('main.admin_dashboard') }}">
+                            <i class="bi bi-grid-1x2-fill"></i>
+                            <span>Tableau de Bord</span>
+                        </a>
+                    </li>
+                    <li class="{{ 'active' if request.endpoint == 'main.admin_manage_projects' else '' }}">
+                        <a href="{{ url_for('main.admin_manage_projects') }}">
+                            <i class="bi bi-folder-check"></i>
+                            <span>Gestion Projets</span>
+                        </a>
+                    </li>
+                    <li class="{{ 'active' if request.endpoint == 'main.manage_users' or 'edit_user' in request.endpoint else '' }}">
+                        <a href="{{ url_for('main.manage_users') }}">
+                            <i class="bi bi-people-fill"></i>
+                            <span>Gestion Utilisateurs</span>
+                        </a>
+                    </li>
+                    <li class="{{ 'active' if request.endpoint == 'main.statistics' else '' }}">
+                        <a href="{{ url_for('main.statistics') }}">
+                            <i class="bi bi-bar-chart-line-fill"></i>
+                            <span>Statistiques</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="{{ url_for('main.index') }}" title="Retour au site public">
+                    <i class="bi bi-box-arrow-up-right"></i>
+                    <span>Site Public</span>
+                </a>
+                <a href="{{ url_for('main.logout') }}" title="Déconnexion">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Déconnexion ({{ current_user.username }})</span>
+                </a>
+            </div>
+        </aside>
+
+        {# --- CONTENU PRINCIPAL DE LA PAGE ADMIN --- #}
+        <div class="admin-main-area">
+            <header class="admin-main-header">
+                <h1 class="current-page-title">{{ title }}</h1>
+                <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+            </header>
+
+            <main class="admin-main-content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages-container">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% block admin_content %}{% endblock %}
+            </main>
+            
+            <footer class="admin-main-footer">
+                 <p>© {{ now().year }} Panel Admin Act4Community.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const adminLayout = document.querySelector('.admin-layout-container');
+        if (sidebarToggle && adminLayout) {
+            sidebarToggle.addEventListener('click', () => {
+                adminLayout.classList.toggle('sidebar-visible'); 
+            });
+        }
+    </script>
+</body>
+</html>

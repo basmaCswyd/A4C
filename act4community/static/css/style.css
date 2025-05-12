@@ -1,0 +1,798 @@
+/* --- RÉINITIALISATION DE BASE ET POLICES --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f7f6; /* Fond général du site public */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+/* Style spécifique pour le body des pages admin */
+body.admin-body {
+    background-color: #f0f2f5; /* Fond plus neutre pour l'admin */
+    display: block; /* Remplacer display:flex pour admin-body */
+}
+
+
+a {
+    color: #4DB199; /* Vert A4C pour liens */
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+    color: #3ca08a;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* --- CONTENEUR PRINCIPAL (Site Public) --- */
+.main-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    flex: 1;
+}
+
+/* --- HEADER / NAVIGATION (Site Public) --- */
+.main-header {
+    background-color: var(--a4c-dark-blue, #1A3D6B); /* Fallback si var non définie */
+    color: #fff;
+    padding: 0.8rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky; /* Navbar qui reste en haut */
+    top: 0;
+    z-index: 1020; /* Au-dessus du contenu */
+}
+/* ... (styles .header-logo, .main-nav, .user-info comme avant) ... */
+.header-logo a { color: #fff; font-weight: bold; font-size: 1.5rem; text-decoration: none; display: flex; align-items: center;}
+.header-logo img { height: 40px; vertical-align: middle; margin-right: 10px;}
+.main-nav ul { list-style: none; display: flex;}
+.main-nav ul li { margin-left: 1.5rem;}
+.main-nav ul li a { color: #fff; text-decoration: none; padding: 0.5rem 0; position: relative; transition: color 0.3s ease;}
+.main-nav ul li a::after { content: ''; position: absolute; width: 100%; transform: scaleX(0); height: 2px; bottom: 0; left: 0; background-color: #fff; transform-origin: bottom right; transition: transform 0.25s ease-out;}
+.main-nav ul li a:hover::after { transform: scaleX(1); transform-origin: bottom left;}
+.main-nav ul li a:hover, .main-nav ul li a.active { color: #eee;}
+.user-info { color: #eee; font-size: 0.9em; margin-left: 1.5rem;}
+
+
+/* --- FOOTER (Site Public) --- */
+.main-footer {
+    background-color: #e2e6ea;
+    color: #555;
+    text-align: center;
+    padding: 1.5rem 5%;
+    font-size: 0.9em;
+    flex-shrink: 0;
+    border-top: 1px solid #d1d5da;
+}
+.footer-columns { display: flex; justify-content: space-around; text-align: left; margin-bottom: 1rem; flex-wrap: wrap;}
+.footer-column { margin: 0.5rem 1rem;}
+.footer-column h4 { margin-bottom: 0.5rem; color: #333;}
+.footer-column ul { list-style: none;}
+.footer-column ul li a { color: #555;}
+
+/* --- Variables de Couleur (rappel) --- */
+:root {
+ --a4c-dark-blue: #1A3D6B;
+ --a4c-teal: #4DB199;
+ --a4c-light-gray: #f8f9fa;
+ --a4c-text-dark: #212529;
+ --a4c-text-light: #ffffff;
+}
+
+/* --- STYLES GÉNÉRAUX (Boutons, Titres, etc.) --- */
+h1, h2, h3, h4 { color: var(--a4c-dark-blue); margin-bottom: 1rem;}
+.button { display: inline-flex; align-items: center; justify-content: center; background-color: var(--a4c-teal); color: #fff; padding: 0.7rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; text-align: center; text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+.button i { margin-right: 0.5em; font-size: 1.1em;}
+.button:hover { background-color: #3ca08a; color: #fff; text-decoration: none; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1);}
+.button-primary { background-color: var(--a4c-dark-blue); border-color: var(--a4c-dark-blue);}
+.button-primary:hover { background-color: #143055; border-color: #102644;}
+.button-secondary { background-color: #6c757d; border-color: #6c757d; color: #fff;}
+.button-secondary:hover { background-color: #5a6268; border-color: #545b62;}
+.button-small { padding: 0.5rem 1rem; font-size: 0.85rem;}
+.button-edit { background-color: #ffc107; border-color: #ffc107; color: #212529;}
+.button-edit:hover { background-color: #e0a800; border-color: #d39e00; color: #212529;}
+.button-delete { background-color: #dc3545; border-color: #dc3545;}
+.button-delete:hover { background-color: #c82333; border-color: #bd2130;}
+.button-delete:disabled { background-color: #e9ecef; border-color: #e9ecef; color: #adb5bd; cursor: not-allowed; box-shadow: none; transform: none;}
+
+
+/* --- PAGE D'ACCUEIL (index.html) --- */
+.hero-section { text-align: center; padding: 3rem 1rem;}
+.hero-section .logo { max-height: 80px; margin-bottom: 1.5rem;}
+.hero-section h1 { font-size: 2.5rem; margin-bottom: 1rem;}
+.hero-section p { font-size: 1.1rem; color: #555; max-width: 700px; margin: 0 auto 2rem auto;}
+.hero-actions .button { margin: 0 0.5rem;}
+
+/* --- PAGE DE SUIVI (my_projects.html) --- */
+.status-tracker { margin-bottom: 2.5rem; padding: 1.5rem; background-color: #e9f7f4; border-radius: 5px;}
+.status-tracker h2 { text-align: center; margin-bottom: 2rem; color: var(--a4c-dark-blue);}
+.status-steps { display: flex; justify-content: space-between; position: relative; margin: 0 auto; max-width: 600px;}
+.status-steps::before { content: ''; position: absolute; top: 50%; left: 10%; right: 10%; height: 3px; background-color: #ccc; transform: translateY(-50%); z-index: 1;}
+.step { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 2; width: 100px;}
+.step-icon { width: 40px; height: 40px; border-radius: 50%; background-color: #ccc; color: #fff; display: flex; justify-content: center; align-items: center; font-weight: bold; margin-bottom: 0.5rem; border: 3px solid #f4f7f6; transition: background-color 0.4s ease;}
+.step-icon::before { content: counter(step); counter-increment: step;}
+.step-label { font-size: 0.9rem; font-weight: bold; color: #555;}
+.step.active .step-icon { background-color: var(--a4c-teal);}
+.step.completed .step-icon { background-color: var(--a4c-dark-blue);}
+.step.active .step-label, .step.completed .step-label { color: #333;}
+.project-details-section { background-color: #fff; padding: 2rem; border-radius: 5px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 2rem;}
+.project-details-section h3 { border-bottom: 2px solid #e2e6ea; padding-bottom: 0.5rem; margin-bottom: 1.5rem;}
+.detail-item { margin-bottom: 1rem; display: flex; flex-wrap: wrap;}
+.detail-item-label { font-weight: bold; color: var(--a4c-dark-blue); margin-right: 0.5rem; flex-basis: 150px; flex-shrink: 0;}
+.detail-item-value { color: #555; flex-grow: 1;}
+.detail-item-value a { display: inline-block; background-color: #f1f1f1; padding: 3px 8px; border-radius: 3px; font-size: 0.9em; margin-right: 5px; margin-bottom: 5px;}
+.detail-item-value a:hover { background-color: #e0e0e0; text-decoration: none;}
+.help-section { background-color: #e9f7f4; padding: 1.5rem; text-align: center; border-radius: 5px;}
+.help-section h4 { color: var(--a4c-dark-blue);}
+
+/* --- FORMULAIRES (Général) --- */
+.form-group { margin-bottom: 1.5rem;}
+.form-label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: var(--a4c-dark-blue);}
+.form-control { display: block; width: 100%; padding: 0.8rem 1rem; font-size: 1rem; line-height: 1.5; color: #495057; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; border-radius: 4px; transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;}
+.form-control:focus { color: #495057; background-color: #fff; border-color: #8bc4b8; outline: 0; box-shadow: 0 0 0 0.2rem rgba(77, 177, 153, 0.25);}
+textarea.form-control { min-height: 120px; resize: vertical;}
+.form-text { font-size: 0.85em; color: #6c757d; margin-top: 0.25rem;}
+.form-error { color: #dc3545; font-size: 0.85em; margin-top: 0.25rem;}
+.form-control.is-invalid { border-color: #dc3545;}
+
+/* --- PAGES D'AUTHENTIFICATION (Login/Register - style simple) --- */
+.auth-layout-container { display: flex; justify-content: center; align-items: center; flex-grow: 1; padding: 2rem 1rem; background-color: #eef3f1; width: 100%;}
+.auth-card { width: 100%; max-width: 550px; background-color: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); overflow: hidden; margin: 0 auto; padding: 2.5rem;}
+.auth-form-content { width: 100%; max-width: 400px; margin: 0 auto;}
+.auth-title { color: var(--a4c-dark-blue); font-size: 1.8rem; font-weight: 600; margin-bottom: 0.5rem; text-align: center;}
+.auth-subtitle { color: #6c757d; font-size: 1rem; margin-bottom: 2.5rem; text-align: center;}
+.auth-form .form-label { font-size: 0.85rem; font-weight: 600; color: #555; margin-bottom: 0.3rem;}
+.auth-form .form-control { background-color: #f8f9fa; border: none; border-bottom: 2px solid #dee2e6; border-radius: 0; padding: 0.7rem 0.5rem; transition: border-color 0.2s ease-in-out;}
+.auth-form .form-control:focus { background-color: #fff; border-color: var(--a4c-teal); box-shadow: none;}
+.auth-form .form-control.is-invalid { border-color: #dc3545;}
+.auth-form .form-error { font-size: 0.8rem;}
+.auth-form .button.auth-button { width: 100%; padding: 0.9rem; font-size: 1.1rem; font-weight: bold; background: linear-gradient(90deg, var(--a4c-teal) 0%, #45a08c 100%); border: none; margin-top: 1rem;}
+.auth-form .button.auth-button:hover { background: linear-gradient(90deg, #45a08c 0%, var(--a4c-teal) 100%);}
+.auth-alternative-action { text-align: center; margin-top: 2rem; font-size: 0.95rem; color: #6c757d;}
+.auth-link { color: var(--a4c-dark-blue); font-weight: 600; text-decoration: none;}
+.auth-link:hover { text-decoration: underline;}
+
+
+/* --- MESSAGES FLASH --- */
+.flash-messages-container { margin-bottom: 1.5rem; } /* Pour admin layout */
+.flash-message { padding: 1rem 1.5rem; margin-bottom: 1.5rem; border: 1px solid transparent; border-radius: 6px; position: relative;}
+.flash-success { color: #0f5132; background-color: #d1e7dd; border-color: #badbcc;}
+.flash-danger { color: #842029; background-color: #f8d7da; border-color: #f5c2c7;}
+.flash-warning { color: #664d03; background-color: #fff3cd; border-color: #ffecb5;}
+.flash-info { color: #055160; background-color: #cff4fc; border-color: #b6effb;}
+
+
+/* --- TABLEAUX (Général) --- */
+.table { width: 100%; margin-bottom: 1rem; color: #333; border-collapse: collapse;}
+.table th, .table td { padding: 0.9rem; vertical-align: top; border-top: 1px solid #dee2e6;}
+.table thead th { vertical-align: bottom; border-bottom: 2px solid #dee2e6; text-align: left; background-color: #f8f9fa;}
+.table tbody tr:nth-of-type(odd) { background-color: rgba(0, 0, 0, 0.03);}
+.table-hover tbody tr:hover { background-color: rgba(0, 0, 0, 0.06);}
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch;}
+
+/* --- NOUVEAUX STYLES POUR L'INTERFACE ADMIN AVEC SIDEBAR --- */
+.admin-layout-container { display: flex; min-height: 100vh;}
+.admin-sidebar { width: 260px; background-color: #2c3e50; color: #ecf0f1; display: flex; flex-direction: column; transition: width 0.3s ease, transform 0.3s ease; position: fixed; left: 0; top: 0; bottom: 0; z-index: 1000;}
+.sidebar-header { padding: 1.2rem 1rem; border-bottom: 1px solid #34495e; text-align: center;}
+.sidebar-logo-link { display: flex; align-items: center; justify-content: center; text-decoration: none; color: #fff;}
+.sidebar-logo { height: 35px; margin-right: 0.75rem;}
+.sidebar-title-text { font-size: 1.2rem; font-weight: 600; white-space: nowrap; opacity: 1; transition: opacity 0.2s ease;}
+.sidebar-nav { flex-grow: 1; padding-top: 1rem;}
+.sidebar-nav ul { list-style: none; padding: 0; margin: 0;}
+.sidebar-nav li a { display: flex; align-items: center; padding: 0.9rem 1.5rem; color: #bdc3c7; text-decoration: none; transition: background-color 0.2s ease, color 0.2s ease; white-space: nowrap;}
+.sidebar-nav li a i { margin-right: 1rem; font-size: 1.2rem; width: 20px; text-align: center;}
+.sidebar-nav li a span { opacity: 1; transition: opacity 0.2s ease;}
+.sidebar-nav li a:hover { background-color: #34495e; color: #fff;}
+.sidebar-nav li.active a { background-color: var(--a4c-teal); color: #fff; font-weight: 500; border-left: 4px solid #fff; padding-left: calc(1.5rem - 4px);}
+.sidebar-footer { padding: 1rem; border-top: 1px solid #34495e; font-size: 0.85em;}
+.sidebar-footer a { display: flex; align-items: center; color: #bdc3c7; text-decoration: none; padding: 0.5rem 0; white-space: nowrap;}
+.sidebar-footer a:hover { color: #fff;}
+.sidebar-footer a i { margin-right: 0.75rem;}
+.admin-main-area { flex-grow: 1; padding-left: 260px; transition: padding-left 0.3s ease; display: flex; flex-direction: column; min-height: 100vh;}
+.admin-main-header { background-color: #fff; padding: 1rem 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 999;}
+.current-page-title { font-size: 1.5rem; color: var(--a4c-dark-blue); margin: 0;}
+.sidebar-toggle-btn { display: none; background: none; border: none; font-size: 1.8rem; color: var(--a4c-dark-blue); cursor: pointer;}
+.admin-main-content { padding: 1.5rem; flex-grow: 1; background-color: #f0f2f5;}
+.admin-main-footer { background-color: #fff; padding: 1rem 1.5rem; text-align: center; font-size: 0.85em; color: #6c757d; border-top: 1px solid #e9ecef; flex-shrink: 0;}
+.admin-layout-container.sidebar-collapsed .admin-sidebar { width: 0; transform: translateX(-260px);} /* Changé pour translation */
+.admin-layout-container.sidebar-collapsed .sidebar-title-text, .admin-layout-container.sidebar-collapsed .sidebar-nav li a span, .admin-layout-container.sidebar-collapsed .sidebar-footer a span { opacity: 0;}
+.admin-layout-container.sidebar-collapsed .admin-main-area { padding-left: 0;}
+
+/* --- STYLES ADMIN SPÉCIFIQUES (Dashboard, Tables, etc.) --- */
+.admin-section { padding: 1.5rem 0;} /* Utilisé dans les anciennes pages admin, peut être enlevé si plus utile */
+.admin-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #eee;}
+.admin-header-bar .admin-title { margin-bottom: 0; border-bottom: none;}
+.admin-header-bar .admin-welcome { margin-bottom: 0; font-size: 1rem; color: #555;}
+.dashboard-header-intro { margin-bottom: 1.5rem; }
+.dashboard-header-intro .admin-welcome { font-size: 1.1rem; color: #454545; }
+.key-indicators-section { margin-bottom: 2.5rem;}
+.section-heading { font-size: 1.1rem; font-weight: 600; color: #555e68; margin-bottom: 1.2rem; text-transform: uppercase; letter-spacing: 0.5px;}
+.indicators-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;}
+.indicator-card { background-color: #fff; border-radius: 8px; padding: 1.5rem; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05); position: relative; overflow: hidden; border-left: 4px solid;}
+.indicator-card .indicator-value { font-size: 2.2rem; font-weight: 700; line-height: 1; margin-bottom: 0.25rem;}
+.indicator-card .indicator-label { font-size: 0.9rem; color: #6c757d; font-weight: 500;}
+.indicator-card .indicator-icon { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); font-size: 3.5rem; opacity: 0.15; pointer-events: none;}
+.indicator-purple { border-left-color: #6f42c1; } .indicator-purple .indicator-value { color: #6f42c1; } .indicator-purple .indicator-icon { color: #6f42c1; }
+.indicator-orange { border-left-color: #fd7e14; } .indicator-orange .indicator-value { color: #fd7e14; } .indicator-orange .indicator-icon { color: #fd7e14; }
+.indicator-green { border-left-color: var(--a4c-teal); } .indicator-green .indicator-value { color: var(--a4c-teal); } .indicator-green .indicator-icon { color: var(--a4c-teal); }
+.indicator-blue { border-left-color: var(--a4c-dark-blue); } .indicator-blue .indicator-value { color: var(--a4c-dark-blue); } .indicator-blue .indicator-icon { color: var(--a4c-dark-blue); }
+.admin-horizontal-nav { display: flex; gap: 0.5rem; margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e0e6ed; overflow-x: auto;}
+.admin-horizontal-nav .nav-item { padding: 0.7rem 1.3rem; color: #495057; text-decoration: none; font-weight: 500; border-radius: 6px; transition: background-color 0.2s ease, color 0.2s ease; white-space: nowrap; display: inline-flex; align-items: center;}
+.admin-horizontal-nav .nav-item i { margin-right: 0.5em; font-size: 1.1em;}
+.admin-horizontal-nav .nav-item:hover { background-color: #e9ecef; color: var(--a4c-dark-blue);}
+.admin-horizontal-nav .nav-item.active { background-color: var(--a4c-dark-blue); color: #fff; box-shadow: 0 2px 5px rgba(26, 61, 107, 0.3);}
+.charts-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;}
+.chart-container { background-color: #fff; border-radius: 8px; padding: 1.5rem; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);}
+.chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;}
+.chart-header h3 { margin: 0; font-size: 1.2rem; color: #343a40; font-weight: 600;}
+.chart-timespan-select { padding: 0.4rem 0.6rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 0.85rem; background-color: #f8f9fa;}
+.chart-placeholder { min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #f8f9fa; border-radius: 6px; color: #adb5bd; text-align: center;}
+.chart-placeholder p { margin-top: 0.5rem; font-size: 0.9rem;}
+.table-container { background-color: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); margin-top: 1.5rem;}
+.styled-table { width: 100%; border-collapse: collapse; margin-bottom: 0;}
+.styled-table thead tr { background-color: #f8f9fa; color: var(--a4c-dark-blue); text-align: left; font-weight: bold; border-bottom: 2px solid var(--a4c-teal);}
+.styled-table th, .styled-table td { padding: 12px 15px; border-bottom: 1px solid #e9ecef;}
+.styled-table tbody tr { border-bottom: 1px solid #e9ecef; transition: background-color 0.15s ease;}
+.styled-table tbody tr:nth-of-type(even) { background-color: #fbfcfc;}
+.styled-table tbody tr:last-of-type { border-bottom: 2px solid var(--a4c-teal);}
+.styled-table tbody tr:hover { background-color: #e9f7f4;}
+.role-badge { padding: 0.25em 0.6em; font-size: 0.8rem; font-weight: 700; line-height: 1; color: #fff; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: 0.3rem;}
+.role-admin { background-color: var(--a4c-dark-blue); } .role-membre_a4c { background-color: var(--a4c-teal); } .role-candidat { background-color: #6c757d; }
+.actions-cell .button { margin: 3px; }
+.form-container.edit-user-form { background-color: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); max-width: 600px; margin: 1.5rem auto;}
+.edit-user-form .form-label { font-weight: 600; color: var(--a4c-dark-blue); margin-bottom: 0.5rem;}
+.edit-user-form .form-control { border: 1px solid #ced4da; border-radius: 5px; padding: 0.75rem 1rem;}
+.edit-user-form .form-control-lg { padding: 0.8rem 1.2rem; font-size: 1.1rem;}
+.edit-user-form .form-control:focus { border-color: var(--a4c-teal); box-shadow: 0 0 0 0.2rem rgba(77, 177, 153, 0.25);}
+.edit-user-form .form-actions { margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;}
+.text-center { text-align: center !important; }
+.d-inline-block { display: inline-block !important; }
+.mt-3 { margin-top: 1rem !important; }
+.mb-3 { margin-bottom: 1rem !important; }
+.mb-0 { margin-bottom: 0 !important; }
+.mb-1 { margin-bottom: 0.25rem !important; }
+.mb-4 { margin-bottom: 1.5rem !important; }
+.text-muted { color: #6c757d !important; }
+.fst-italic { font-style: italic !important; }
+.fs-6 { font-size: 1rem !important; } /* Ajuster si besoin */
+
+
+/* --- RESPONSIVE POUR L'INTERFACE ADMIN --- */
+@media (max-width: 992px) { 
+    .admin-sidebar { transform: translateX(-260px); /* Sidebar cachée par défaut */ }
+    .admin-layout-container.sidebar-visible .admin-sidebar { transform: translateX(0); }
+    .admin-main-area { padding-left: 0; }
+    .sidebar-toggle-btn { display: block; }
+}
+@media (min-width: 993px) { /* Quand la sidebar est toujours visible */
+     .admin-layout-container.sidebar-collapsed .admin-sidebar { width: 80px; /* Sidebar réduite */}
+     .admin-layout-container.sidebar-collapsed .sidebar-title-text,
+     .admin-layout-container.sidebar-collapsed .sidebar-nav li a span,
+     .admin-layout-container.sidebar-collapsed .sidebar-footer a span {
+         display: none; /* Cacher le texte, garder icônes */
+     }
+     .admin-layout-container.sidebar-collapsed .sidebar-nav li a i {
+         margin-right: 0; /* Enlever marge des icônes */
+     }
+     .admin-layout-container.sidebar-collapsed .admin-main-area {
+         padding-left: 80px;
+     }
+     /* Cacher le bouton burger sur grand écran si la sidebar est toujours visible ou réduite */
+     /* .sidebar-toggle-btn { display: none; } */
+}
+.preserve-whitespace { white-space: pre-line; }
+/* --- NOUVEAUX STYLES AMÉLIORÉS POUR MY_PROJECTS.HTML --- */
+
+.page-title { /* Titre principal de la page (ex: Suivi de Vos Projets) */
+    color: var(--a4c-dark-blue);
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--a4c-teal);
+    display: inline-block;
+}
+
+.project-tracking-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2.5rem;
+    overflow: hidden; /* Pour que les coins arrondis s'appliquent bien */
+}
+
+.status-tracker-header {
+    background-color: #f8f9fa; /* Fond léger pour l'en-tête du statut */
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+.status-tracker-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--a4c-dark-blue);
+    font-weight: 600;
+}
+.status-tracker-header h2 strong {
+    color: var(--a4c-teal); /* Mettre en évidence le nom du projet */
+}
+
+.status-tracker-body {
+    padding: 2rem 1.5rem;
+}
+
+.status-steps-container {
+    display: flex;
+    justify-content: space-around; /* Ou space-between si vous préférez les bords */
+    align-items: flex-start; /* Aligner les icônes et labels en haut */
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.status-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative; /* Pour la ligne de connexion */
+    flex: 1; /* Pour que les étapes prennent l'espace disponible */
+    max-width: 120px; /* Limiter la largeur de chaque étape */
+}
+
+.step-node {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e0e0e0; /* Gris clair pour les étapes non actives */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem; /* Taille des icônes Bootstrap */
+    margin-bottom: 0.5rem;
+    border: 3px solid #fff; /* Bordure pour se détacher du fond */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.status-step.active .step-node {
+    background-color: var(--a4c-teal); /* Vert A4C pour l'étape active */
+}
+.status-step.completed .step-node {
+    background-color: var(--a4c-dark-blue); /* Bleu A4C pour les étapes complétées */
+}
+.status-step.rejected .step-node { /* Style spécifique si rejeté */
+    background-color: #dc3545; /* Rouge */
+}
+/* Les icônes de Bootstrap Icons peuvent prendre la couleur du texte par défaut */
+.status-step.active .step-node i,
+.status-step.completed .step-node i,
+.status-step.rejected .step-node i {
+    color: #fff; /* Assurer que l'icône est blanche */
+}
+
+
+.step-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+.status-step.active .step-label,
+.status-step.completed .step-label {
+    color: #333;
+    font-weight: 600;
+}
+
+/* Ligne de connexion entre les étapes */
+.step-connector {
+    flex-grow: 1;
+    height: 4px; /* Épaisseur de la ligne */
+    background-color: #e0e0e0; /* Gris clair par défaut */
+    margin: 18px 0; /* Aligner verticalement avec les cercles (40px/2 - 4px/2) */
+    transition: background-color 0.3s ease;
+}
+.step-connector.completed {
+    background-color: var(--a4c-dark-blue); /* Bleu si l'étape précédente est complétée */
+}
+.step-connector.rejected { /* Si le projet est rejeté, la ligne devient rouge */
+    background-color: #dc3545;
+}
+
+
+.status-message {
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 5px;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.status-message i {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+}
+.message-success { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc;}
+.message-danger { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7;}
+.message-info { background-color: #cff4fc; color: #055160; border: 1px solid #b6effb;}
+
+
+.project-details-section { /* Hérite déjà de styles, on ajuste */
+    padding: 1.5rem;
+    background-color: #fff; /* Assurer un fond blanc si pas hérité */
+}
+.details-title {
+    font-size: 1.4rem;
+    color: var(--a4c-dark-blue);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 1 ou 2 colonnes */
+    gap: 1rem 1.5rem; /* Espacement vertical et horizontal */
+}
+.detail-item {
+    padding: 0.5rem 0;
+    /* border-bottom: 1px dashed #f0f0f0; */ /* Ligne discrète si on veut séparer chaque item */
+}
+.detail-item:last-child {
+    border-bottom: none;
+}
+.detail-label {
+    display: block; /* Label au-dessus de la valeur */
+    font-weight: 600;
+    color: #555;
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+.detail-value {
+    color: var(--a4c-text-dark);
+    font-size: 1rem;
+}
+.detail-item.wide { /* Pour que des champs comme description prennent toute la largeur */
+    grid-column: 1 / -1; /* S'étend sur toutes les colonnes de la grille */
+}
+.document-link {
+    display: inline-flex; /* Pour icône et texte sur la même ligne */
+    align-items: center;
+    background-color: #e9ecef;
+    color: var(--a4c-dark-blue);
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+.document-link i {
+    margin-right: 0.3rem;
+}
+.document-link:hover {
+    background-color: #d1d5da;
+    text-decoration: none;
+    color: var(--a4c-dark-blue);
+}
+
+.project-separator {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+    margin: 2.5rem 0;
+}
+
+.no-projects-message {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.no-projects-message .big-icon {
+    font-size: 3rem;
+    color: var(--a4c-teal);
+    margin-bottom: 1rem;
+}
+.no-projects-message h4 {
+    color: var(--a4c-dark-blue);
+    margin-bottom: 0.5rem;
+}
+.no-projects-message p {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+.button.button-lg { /* Pour le bouton "Soumettre premier projet" */
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+}
+
+.help-section-container {
+    background-color: var(--a4c-light-gray); /* Ou #e9f7f4 comme avant */
+    border: 1px solid #d1e7dd; /* Bordure légère vert */
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    margin-top: 2.5rem;
+}
+.help-section-container h4 {
+    color: var(--a4c-dark-blue);
+    margin-bottom: 0.5rem;
+}
+.help-section-container p {
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+/* Assurer que .preserve-whitespace est défini (s'il n'existe pas déjà) */
+.preserve-whitespace {
+    white-space: pre-line; /* Respecte les sauts de ligne, mais fusionne les espaces multiples */
+}
+
+.button-primary-outline { /* Ou réutiliser le style existant si vous en avez un */
+    border: 1px solid var(--a4c-dark-blue);
+    color: var(--a4c-dark-blue);
+    background-color: transparent;
+}
+.button-primary-outline:hover {
+    background-color: var(--a4c-dark-blue);
+    color: #fff;
+}
+.button-info-outline {
+    border: 1px solid #0dcaf0; /* Couleur info Bootstrap par défaut */
+    color: #0dcaf0;
+    background-color: transparent;
+}
+.button-info-outline:hover {
+    background-color: #0dcaf0;
+    color: #fff;
+}
+.mt-1 { margin-top: 0.25rem !important; }
+/* --- STYLES POUR LE WIDGET D'AIDE FLOTTANT (POP-UP) --- */
+
+.help-fab-button { /* Bouton flottant pour ouvrir le widget */
+    position: fixed;
+    bottom: 20px; /* Espace par rapport au bas */
+    right: 20px;  /* Espace par rapport à la droite */
+    width: 60px;
+    height: 60px;
+    background-color: var(--a4c-dark-blue); /* Couleur principale A4C */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Rond */
+    font-size: 1.8rem; /* Taille de l'icône */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050; /* Au-dessus de beaucoup d'éléments */
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease;
+}
+.help-fab-button:hover {
+    background-color: var(--a4c-teal); /* Couleur secondaire au survol */
+    transform: scale(1.1);
+}
+/* Optionnel: Cacher le texte s'il y en avait un à côté de l'icône
+.help-fab-button span { 
+    display: none; 
+}
+*/
+
+.help-popup-container {
+    position: fixed; /* Positionnement flottant */
+    bottom: 90px;    /* Un peu au-dessus du FAB (60px FAB + 20px espace + 10px) */
+    right: 20px;     /* Aligné avec le FAB */
+    width: 360px;    /* Largeur typique d'un widget de chat */
+    max-height: calc(100vh - 120px); /* Hauteur max, laissant de l'espace en haut et pour le FAB */
+    background-color: #ffffff;
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2); /* Ombre plus prononcée */
+    z-index: 1040; 
+    display: none; /* Caché par défaut, JS gère l'affichage avec 'flex' */
+    flex-direction: column;
+    overflow: hidden; /* Empêche le contenu de déborder les coins arrondis */
+    border: 1px solid #e0e0e0; /* Bordure légère */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Pour animation d'apparition */
+    opacity: 0;
+    transform: translateY(20px); /* Commence un peu plus bas pour l'animation */
+}
+
+.help-popup-container.visible { /* Classe ajoutée par JS pour afficher */
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+.help-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background-color: var(--a4c-dark-blue); 
+    color: white;
+    border-top-left-radius: 9px; 
+    border-top-right-radius: 9px;
+    cursor: default; /* Change cursor si vous ne le rendez pas déplaçable */
+}
+.help-popup-header h3 {
+    margin: 0;
+    font-size: 1.1rem; /* Titre du popup un peu plus petit */
+    color: white; 
+    display: flex;
+    align-items: center;
+}
+.help-popup-header h3 i {
+    margin-right: 0.6rem;
+    font-size: 1.3rem;
+}
+.help-popup-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.6rem; 
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.2rem;
+    opacity: 0.8;
+}
+.help-popup-close-btn:hover {
+    opacity: 1;
+}
+
+.help-popup-content {
+    padding: 1rem;
+    overflow-y: auto; /* Scroll si contenu trop long */
+    flex-grow: 1; /* Prend l'espace vertical restant */
+    background-color: #f9f9f9; /* Fond légèrement différent pour le contenu */
+}
+
+/* Styles pour la FAQ à l'intérieur du popup (déjà fournis, peuvent nécessiter ajustements) */
+.faq-section h4, .contact-support-section h4 {
+    color: var(--a4c-dark-blue);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+}
+.faq-item {
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #e7e7e7;
+}
+.faq-item:last-child { border-bottom: none; }
+.faq-question {
+    background-color: transparent;
+    border: none;
+    padding: 0.7rem 0;
+    width: 100%;
+    text-align: left;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    font-size: 0.9rem; /* Police FAQ un peu plus petite */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.faq-question:hover { color: var(--a4c-teal); }
+.faq-question.active { color: var(--a4c-teal); font-weight: 600; }
+
+.faq-answer {
+    background-color: #fff; /* Fond blanc pour la réponse pour se démarquer */
+    padding: 0; /* Sera géré par JS pour l'animation */
+    font-size: 0.85rem; /* Police réponse plus petite */
+    color: #555;
+    max-height: 0; 
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+    border-left: 3px solid #e0e0e0; /* Bordure gauche plus discrète */
+    margin-bottom: 0.5rem;
+    margin-left: 5px;
+    padding-left: 10px;
+}
+.faq-question.active + .faq-answer {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+}
+.faq-answer p { margin-bottom: 0.5rem; }
+.faq-answer p:last-child { margin-bottom: 0; }
+
+.popup-divider {
+    margin: 1.2rem 0;
+    border: 0;
+    border-top: 1px solid #e7e7e7;
+}
+
+.contact-support-section p {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    color: #555;
+}
+.contact-support-section .button { /* Bouton "Envoyer un Email" */
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+}
+
+
+/* Responsive pour le pop-up d'aide (au cas où) */
+@media (max-width: 420px) { /* Si l'écran est plus petit que la largeur du popup */
+    .help-popup-container {
+        right: 10px;
+        bottom: 80px;
+        width: calc(100% - 20px); /* Presque pleine largeur moins petites marges */
+        max-height: 65vh;
+    }
+    .help-fab-button {
+        bottom: 15px;
+        right: 15px;
+    }
+}
+/* --- CONTENEUR PRINCIPAL (Public et Admin sans sidebar) --- */
+.main-container {
+    width: 90%; /* Ou une valeur en % plus petite si vous voulez plus de marges latérales */
+    max-width: 1140px; /* Largeur maximale typique (similaire à container-lg de Bootstrap) */
+                       /* Vous pouvez réduire ceci (ex: 960px) si vous voulez un contenu plus étroit */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.5rem; /* Espace intérieur */
+    background-color: #fff; /* Fond blanc si différent du body */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Ombre discrète */
+    border-radius: 8px; /* Coins arrondis */
+    flex: 1; /* Pour que le body flex pousse le footer en bas */
+}
+
+/* Styles additionnels que j'ai référencés dans submit_project.html */
+.page-title {
+    color: var(--a4c-dark-blue);
+    margin-bottom: 1.5rem; /* Ajusté par rapport à la version my_projects */
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--a4c-teal);
+    display: inline-block; /* S'adapte à la longueur du texte */
+    font-size: 1.8rem; /* Taille pour les titres de page */
+}
+
+.section-divider {
+    margin: 2rem 0;
+    border: 0;
+    border-top: 1px solid #e0e0e0; /* Ligne de séparation plus discrète */
+}
+
+.input-group-custom { /* Si vous voulez styler le groupe input pour le budget */
+    display: flex;
+    align-items: center;
+}
+.input-group-text-custom {
+    padding: 0.8rem 0.75rem;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+}
+.input-group-custom .form-control {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-actions {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+.text-center { text-align: center !important; }

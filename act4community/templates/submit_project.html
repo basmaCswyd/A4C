@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {# On ajoute le main-container ici car base.html ne le fournit plus directement pour CE bloc #}
+    <div class="main-container">
+        {# Affichage des messages flash (si vous voulez qu'ils soient DANS ce conteneur) #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages-container">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {# Le contenu spécifique de la page de soumission #}
+        <div class="row justify-content-center" style="/* Supprimer le style justify-content-center si main-container gère déjà le centrage */">
+            <div class="col-md-8" style="/* Cette classe col-md-8 vient de Bootstrap, si plus de Bootstrap, il faut un style custom */
+                                          /* Pour l'instant, on peut la laisser et voir ou utiliser une classe custom */
+                                          /* max-width: 768px; margin: 0 auto; /* Exemple de centrage manuel */">
+                <h1 class="page-title">Soumettre un nouveau projet</h1> {# Utilisation de la classe page-title #}
+                <p class="text-muted">Veuillez remplir les informations ci-dessous aussi précisément que possible.</p>
+                <hr class="section-divider"> {# Utilisation de la classe section-divider #}
+                
+                <form method="POST" action="" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-group">
+                        {{ form.title.label(class="form-label fw-bold") }}
+                        {{ form.title(class="form-control form-control-lg" + (" is-invalid" if form.title.errors else "")) }}
+                        {% if form.title.errors %}<div class="form-error">{% for error in form.title.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.description.label(class="form-label fw-bold") }}
+                        {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows=6) }}
+                        {% if form.description.errors %}<div class="form-error">{% for error in form.description.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                    </div>
+
+                    {# Mise en page en grille pour les champs suivants si vous le souhaitez #}
+                    {# Exemple : <div class="form-grid"> #}
+                    <div class="form-group">
+                        {{ form.budget_estime.label(class="form-label") }}
+                        <div class="input-group-custom"> {# Classe custom pour styler le groupe input si besoin #}
+                          <span class="input-group-text-custom">€</span>
+                          {{ form.budget_estime(class="form-control" + (" is-invalid" if form.budget_estime.errors else "")) }}
+                        </div>
+                        {% if form.budget_estime.errors %}<div class="form-error">{% for error in form.budget_estime.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                        <div class="form-text">Estimation du coût total du projet.</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        {{ form.localisation.label(class="form-label") }}
+                        {{ form.localisation(class="form-control" + (" is-invalid" if form.localisation.errors else "")) }}
+                        {% if form.localisation.errors %}<div class="form-error">{% for error in form.localisation.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                        <div class="form-text">Où le projet se déroulera-t-il principalement ?</div>
+                    </div>
+                    {# Fin exemple : </div> form-grid #}
+
+                    <div class="form-group">
+                        {{ form.date_debut_prevue.label(class="form-label") }}
+                        {{ form.date_debut_prevue(class="form-control" + (" is-invalid" if form.date_debut_prevue.errors else ""), type="date") }}
+                        {% if form.date_debut_prevue.errors %}<div class="form-error">{% for error in form.date_debut_prevue.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                    </div>
+                    
+                     <div class="form-group">
+                        {{ form.duree_estimee.label(class="form-label") }}
+                        {{ form.duree_estimee(class="form-control" + (" is-invalid" if form.duree_estimee.errors else "")) }}
+                        {% if form.duree_estimee.errors %}<div class="form-error">{% for error in form.duree_estimee.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                        <div class="form-text">Exemples: 3 mois, 1 an, 6 semaines...</div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.objectifs_specifiques.label(class="form-label") }}
+                        {{ form.objectifs_specifiques(class="form-control" + (" is-invalid" if form.objectifs_specifiques.errors else ""), rows=4) }}
+                        <div class="form-text">Listez les objectifs clairs et mesurables de votre projet (ex: créer 5 emplois, former 20 jeunes...).</div>
+                        {% if form.objectifs_specifiques.errors %}<div class="form-error">{% for error in form.objectifs_specifiques.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.documents.label(class="form-label") }}
+                        {{ form.documents(class="form-control" + (" is-invalid" if form.documents.errors else "")) }}
+                         <div class="form-text">Vous pouvez joindre un business plan, des statuts, un CV, etc. (Optionnel)</div>
+                        {% if form.documents.errors %}<div class="form-error">{% for error in form.documents.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                    </div>
+                    
+                    <hr class="section-divider">
+                    <div class="form-actions text-center"> {# form-actions pour styler les boutons de formulaire #}
+                        {{ form.submit(class="button button-success button-lg") }} {# Utilisation de la classe button et button-lg #}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> {# Fin de .main-container #}
+{% endblock %}

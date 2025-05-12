@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Convocation Rendez-vous Projet - {{ project.title }}</title>
+    <style>
+        body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 11pt; line-height: 1.5; color: #333; margin: 0; padding: 0; }
+        .container { width: 90%; margin: 20px auto; padding: 20px; border: 1px solid #eee; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #1A3D6B; padding-bottom: 15px; }
+        .header img { max-height: 70px; margin-bottom: 10px; }
+        .header h1 { color: #1A3D6B; margin: 0; font-size: 18pt; }
+        .content h2 { color: #4DB199; font-size: 14pt; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;}
+        .content p, .content li { margin-bottom: 10px; }
+        .details-table { width: 100%; margin-bottom: 20px; border-collapse: collapse;}
+        .details-table td { padding: 8px; border: 1px solid #ddd; }
+        .details-table td:first-child { font-weight: bold; width: 30%; background-color: #f9f9f9;}
+        .important-note { background-color: #fff3cd; border-left: 5px solid #ffeeba; padding: 10px; margin-top: 20px; font-weight: bold;}
+        .footer { text-align: center; margin-top: 40px; font-size: 9pt; color: #777; border-top: 1px solid #eee; padding-top: 10px;}
+        .signature { margin-top: 50px; }
+        .obligatoire { color: red; font-weight: bold; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            {% if logo_url %}
+                <img src="{{ logo_url }}" alt="Logo Act4Community">
+            {% endif %}
+            <h1>Modèle de Convocation pour Entretien</h1>
+        </div>
+
+        <div class="content">
+            <p>
+                <strong>Objet : Convocation pour Entretien - Projet "{{ project.title }}"</strong>
+            </p>
+            <p>
+                Cher/Chère {{ project.applicant.username }},
+            </p>
+            <p>
+                Nous avons le plaisir de vous informer que votre projet "<strong>{{ project.title }}</strong>" a été retenu pour la prochaine étape, qui consistera en un entretien avec notre comité.
+                Nous vous félicitons pour la qualité de votre soumission !
+            </p>
+
+            <h2>Détails du Rendez-vous :</h2>
+            <table class="details-table">
+                <tr>
+                    <td>Projet Concerné :</td>
+                    <td>{{ project.title }}</td>
+                </tr>
+                <tr>
+                    <td>Date et Heure :</td>
+                    <td><strong>{{ project.appointment_date.strftime('%A %d %B %Y à %Hh%M') if project.appointment_date else 'Non définie' }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Lieu :</td>
+                    <td>{{ project.appointment_location or 'À confirmer' }}</td>
+                </tr>
+            </table>
+            
+            <h2>Préparation pour l'Entretien :</h2>
+            <p>
+                Pour cet entretien, veuillez vous munir des éléments suivants :
+            </p>
+            <div class="important-note">
+                {{ project.appointment_notes | replace('\n', '<br>') | safe if project.appointment_notes else 'Veuillez apporter votre pièce d\'identité et tout document original pertinent.' }}
+                <br><strong>Note : La présentation de cette fiche de convocation imprimée est <span class="obligatoire">obligatoire</span>.</strong>
+            </div>
+            
+            <p>
+                Nous vous conseillons de vous présenter 15 minutes avant l'heure prévue.
+            </p>
+            <p>
+                Si pour une raison quelconque vous ne pouvez pas vous présenter à ce rendez-vous, veuillez nous en informer dès que possible afin que nous puissions reprogrammer.
+            </p>
+            <p>
+                Pour confirmer votre présence, veuillez répondre à ce message (si reçu par email) ou contacter notre bureau au [Numéro de Téléphone/Email Act4Community].
+            </p>
+
+            <div class="signature">
+                <p>Cordialement,</p>
+                <p>L'équipe Act4Community<br>
+                Safi<br>
+                Coordonnées Act4Community act4comsafi@gmail.com</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            Ceci est une convocation générée automatiquement. Ne pas répondre directement à cet email si ce n'est pas indiqué ci-dessus.
+        </div>
+    </div>
+</body>
+</html>

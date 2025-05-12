@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    {# Colonne principale avec les détails du projet #}
+    <div class="col-lg-8">
+        <h2 class="mb-3">Évaluer le Projet: {{ project.title }}</h2>
+        
+        <div class="card mb-4">
+            <div class="card-header">Informations Générales</div>
+            <div class="card-body">
+                <p><strong>Soumis par:</strong> {{ project.applicant.username }} ({{ project.applicant.email }})</p>
+                <p><strong>Date de soumission:</strong> {{ project.submission_date.strftime('%d %B %Y à %H:%M') }}</p>
+                <p><strong>Statut Actuel:</strong> 
+                    <span class="badge fs-6 
+                        {% if project.status == 'Soumis' %} text-dark bg-info 
+                        {% elif project.status == 'En évaluation' %} text-dark bg-warning 
+                        {% elif project.status == 'Approuvé' %} bg-success 
+                        {% elif project.status == 'Rejeté' %} bg-danger 
+                        {% else %} bg-secondary 
+                        {% endif %}">
+                        {{ project.status }}
+                    </span>
+                </p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+             <div class="card-header">Détails du Projet</div>
+             <div class="card-body">
+                <h5 class="card-title">Description</h5>
+                 {# Suppression de | nl2br ici #}
+                <p class="preserve-whitespace">{{ project.description }}</p> 
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Budget Estimé:</strong> {{ "{:,.2f} €".format(project.budget_estime) if project.budget_estime else 'Non spécifié' }}</p>
+                        <p><strong>Localisation:</strong> {{ project.localisation or 'Non spécifiée' }}</p>
+                    </div>
+                     <div class="col-md-6">
+                        <p><strong>Date Début Prévue:</strong> {{ project.date_debut_prevue.strftime('%d/%m/%Y') if project.date_debut_prevue else 'Non spécifiée' }}</p>
+                        <p><strong>Durée Estimée:</strong> {{ project.duree_estimee or 'Non spécifiée' }}</p>
+                    </div>
+                </div>
+                 <hr>
+                 <h5 class="card-title mt-3">Objectifs Spécifiques</h5>
+                 {# Suppression de | nl2br ici #}
+                 <p class="preserve-whitespace">{{ project.objectifs_specifiques if project.objectifs_specifiques else 'Non spécifiés' }}</p>
+                 <hr>
+                 <h5 class="card-title mt-3">Documents Attachés</h5>
+                 {% if project.documents %}
+                    <ul class="list-unstyled">
+                    {% for doc in project.documents %}
+                        <li>
+                            <a href="{{ url_for('main.uploaded_file', project_id_str=project.id, filename=doc.filename) }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-download"></i> {{ doc.filename }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">Aucun document attaché.</p>
+                {% endif %}
+            </div>
+        </div>
+
+         {# Séparé pour plus de clarté #}
+         <div class="card mb-4">
+            <div class="card-header">Votre Évaluation</div>
+            <div class="card-body">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.score.label(class="form-label fw-bold") }}
+                        {{ form.score(class="form-control" + (" is-invalid" if form.score.errors else "")) }}
+                        <div class="form-text">Note de 1 (minimum) à 5 (maximum).</div>
+                        {% if form.score.errors %}<div class="invalid-feedback">{% for error in form.score.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.comments.label(class="form-label fw-bold") }}
+                        {{ form.comments(class="form-control" + (" is-invalid" if form.comments.errors else ""), rows=5) }}
+                        <div class="form-text">Justifiez votre note et donnez vos recommandations.</div>
+                        {% if form.comments.errors %}<div class="invalid-feedback">{% for error in form.comments.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="button btn-lg") }} {# Utilisation de la classe .button #}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {# Colonne latérale pour les évaluations existantes (visibles pour admin) #}
+    <div class="col-lg-4">
+         <div class="card sticky-top" style="top: 20px;"> {# sticky-top pour qu'elle reste visible au scroll #}
+            <div class="card-header">Évaluations Précédentes</div>
+            <div class="card-body">
+                {% if project.evaluations %}
+                    {% if current_user.role == 'admin' %} {# Admin voit toutes les évaluations #}
+                        <ul class="list-group list-group-flush">
+                        {% for eval in project.evaluations %}
+                            <li class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                     <h6 class="mb-1">Par: {{ eval.evaluator.username }}</h6>
+                                     <small>{{ eval.evaluation_date.strftime('%d/%m/%y') }}</small>
+                                </div>
+                                <p class="mb-1"><strong>Score:</strong> {{ eval.score }}/5</p>
+                                <small class="preserve-whitespace"><strong>Commentaire:</strong> {{ eval.comments }}</small> {# Ajout preserve-whitespace ici aussi #}
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %} {# Membre A4C ne voit pas les autres évaluations pour l'instant #}
+                        <p class="text-muted">Les autres évaluations seront visibles après la décision finale.</p>
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted">Aucune évaluation pour le moment.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

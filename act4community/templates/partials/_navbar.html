@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">Act4Community</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">Accueil</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'candidat' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.submit_project') }}">Soumettre projet</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.my_projects') }}">Mes Projets</a>
+                        </li>
+                    {% elif current_user.role == 'membre_a4c' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.evaluate_projects_list') }}">Évaluer Projets</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.statistics') }}">Statistiques</a>
+                        </li>
+                    {% elif current_user.role == 'admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.admin_dashboard') }}">Admin Dashboard</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.manage_users') }}">Gérer Utilisateurs</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('main.statistics') }}">Rapports/Stats</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                 {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="navbar-text me-2">Bonjour, {{ current_user.username }} ({{ current_user.role }})</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.logout') }}">Déconnexion</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.register') }}">S'inscrire</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

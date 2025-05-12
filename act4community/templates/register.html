@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="auth-layout-container">
+        <div class="auth-card">
+            <div class="auth-form-column">
+                <div class="auth-form-content">
+
+                    {# --- AJOUTER CECI POUR LES MESSAGES FLASH --- #}
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="flash-messages-container" style="margin-bottom: 1.5rem;">
+                            {% for category, message in messages %}
+                                <div class="flash-message flash-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    {# --- FIN AJOUT MESSAGES FLASH --- #}
+
+                    <h2 class="auth-title">Créer votre compte</h2>
+                    <p class="auth-subtitle">Rejoignez la plateforme Act4Community.</p>
+                    <form method="POST" action="" class="auth-form">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ form.username.label(class="form-label") }}
+                            {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else ""), placeholder="Entrez votre nom d'utilisateur") }}
+                            {% if form.username.errors %}<div class="form-error">{% for error in form.username.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="exemple@domaine.com") }}
+                            {% if form.email.errors %}<div class="form-error">{% for error in form.email.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Minimum 6 caractères") }}
+                            {% if form.password.errors %}<div class="form-error">{% for error in form.password.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.confirm_password.label(class="form-label") }}
+                            {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else ""), placeholder="Retapez votre mot de passe") }}
+                            {% if form.confirm_password.errors %}<div class="form-error">{% for error in form.confirm_password.errors %}{{ error }}{% endfor %}</div>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.role.label(class="form-label") }}
+                            {{ form.role(class="form-control") }} 
+                            <div class="form-text">Choisissez si vous êtes porteur de projet ou membre évaluateur.</div>
+                        </div>
+                        <div class="form-group button-group">
+                            {{ form.submit(class="button auth-button") }}
+                        </div>
+                    </form>
+                    <div class="auth-alternative-action">
+                        <p>Déjà un compte ? <a href="{{ url_for('main.login') }}" class="auth-link">Se connecter</a></p>
+                    </div>
+                </div>
+            </div>
+            {# Si vous aviez une auth-image-column, elle irait ici #}
+        </div>
+    </div>
+{% endblock %}

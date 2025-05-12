@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Plateforme Act4Community</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+    {# Ce body n'a plus besoin de classe conditionnelle ici, car la structure du contenu gère tout #}
+
+    <header class="main-header">
+        <div class="header-logo">
+            <a href="{{ url_for('main.index') }}">
+                <img src="{{ url_for('static', filename='images/a4c_logo.png') }}" alt="Act4Community Logo"> 
+            </a>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="{{ url_for('main.index') }}" class="{{ 'active' if request.endpoint == 'main.index' else '' }}">Accueil</a></li>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == 'candidat' %}
+                        <li><a href="{{ url_for('main.submit_project') }}" class="{{ 'active' if request.endpoint == 'main.submit_project' else '' }}">Soumettre projet</a></li>
+                        <li><a href="{{ url_for('main.my_projects') }}" class="{{ 'active' if request.endpoint == 'main.my_projects' else '' }}">Mes Projets</a></li>
+                    {% elif current_user.role == 'membre_a4c' %}
+                        <li><a href="{{ url_for('main.evaluate_projects_list') }}" class="{{ 'active' if 'evaluate' in request.endpoint else '' }}">Évaluer Projets</a></li>
+                        <li><a href="{{ url_for('main.statistics') }}" class="{{ 'active' if request.endpoint == 'main.statistics' else '' }}">Statistiques</a></li>
+                    {% elif current_user.role == 'admin' %}
+                        <li><a href="{{ url_for('main.admin_dashboard') }}" class="{{ 'active' if 'admin' in request.endpoint else '' }}">Administration</a></li>
+                    {% endif %}
+                     <li><a href="{{ url_for('main.logout') }}">Déconnexion</a></li>
+                     <li class="user-info"><span>({{ current_user.username }})</span></li>
+                {% else %}
+                    <li><a href="{{ url_for('main.login') }}" class="{{ 'active' if request.endpoint == 'main.login' else '' }}">Connexion</a></li>
+                    <li><a href="{{ url_for('main.register') }}" class="{{ 'active' if request.endpoint == 'main.register' else '' }}">S'inscrire</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    
+    {# --- DÉFINITION UNIQUE ET CENTRALE DU BLOC CONTENT --- #}
+    {# Les templates enfants (index.html, login.html, etc.) rempliront ce bloc. #}
+    {# Si un template enfant a besoin du .main-container, il l'ajoutera LUI-MÊME à l'intérieur de son bloc content. #}
+    {# Les messages flash sont aussi la responsabilité du template enfant s'il veut les placer différemment. #}
+    {% block content %}{% endblock %}
+    {# --- FIN DÉFINITION UNIQUE --- #}
+
+    <footer class="main-footer">
+        <div class="footer-columns">
+             <div class="footer-column"><h4>Act4Community</h4><ul><li><a href="#">À Propos</a></li><li><a href="#">Nos Programmes</a></li><li><a href="#">Actualités</a></li></ul></div>
+             <div class="footer-column"><h4>Liens Utiles</h4><ul><li><a href="#">FAQ</a></li><li><a href="#">Politique de confidentialité</a></li><li><a href="#">Conditions d'utilisation</a></li></ul></div>
+             <div class="footer-column"><h4>Ressources</h4><ul><li><a href="#">Guides</a></li><li><a href="#">Partenaires</a></li><li><a href="#">Presse</a></li></ul></div>
+            <div class="footer-column"><h4>Contact</h4><p>Adresse de contact<br>Ville, Code Postal</p><p>Email: contact@a4c.ma</p></div>
+        </div>
+        <hr style="border-color: #ccc; margin: 1rem 0;">
+        <p>© {{ now().year }} Plateforme Act4Community - Tous droits réservés.</p>
+    </footer>
+
+    <!-- Pop-up FAQ et JS (inchangé par rapport à la version "avant pop-up flottant") -->
+    <!-- Si vous voulez le pop-up flottant, c'est le code de la version avec le FAB ici -->
+    <!-- Pour l'instant, on enlève le FAB et le pop-up pour simplifier et résoudre l'erreur de bloc -->
+    
+    <!-- 
+    <button id="help-fab" class="help-fab-button" title="Besoin d'aide ?">
+        <i class="bi bi-question-circle-fill"></i>
+    </button>
+    <div id="help-popup" class="help-popup-container">
+        ... (contenu du popup) ...
+    </div>
+    <script>
+        ... (script du popup) ...
+    </script>
+    -->
+</body>
+</html>
