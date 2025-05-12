@@ -796,3 +796,479 @@ textarea.form-control { min-height: 120px; resize: vertical;}
     border-top: 1px solid #e9ecef;
 }
 .text-center { text-align: center !important; }
+
+/* --- STYLES POUR LE BOUTON FLOTTANT D'AIDE (FAB) --- */
+.floating-help-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--a4c-dark-blue); /* Utilisez vos variables de couleur A4C */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Pour un cercle parfait */
+    font-size: 1.8rem; /* Taille de l'icône à l'intérieur */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050; /* Au-dessus de la plupart des autres éléments */
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease;
+}
+
+.floating-help-button:hover {
+    background-color: var(--a4c-teal); /* Couleur au survol */
+    transform: scale(1.1); /* Léger agrandissement au survol */
+}
+
+/* --- STYLES POUR LE POP-UP FAQ/CHATBOT --- */
+.help-popup-widget {
+    position: fixed;
+    /* Positionnement initial en bas à droite, JS peut le changer si déplaçable */
+    bottom: 95px; /* Un peu au-dessus du FAB */
+    right: 25px;
+    width: 350px; /* Largeur du widget */
+    max-height: 75vh; /* Hauteur maximale, avec scroll si contenu plus long */
+    background-color: #ffffff;
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Ombre plus prononcée */
+    z-index: 1040; /* En dessous du FAB si jamais ils se superposent pendant une animation */
+    display: flex; /* Changé par JS en 'flex' pour afficher */
+    flex-direction: column;
+    overflow: hidden; /* Empêche le contenu de déborder les coins arrondis */
+    border: 1px solid #dee2e6; /* Bordure légère */
+    opacity: 0; /* Pour animation d'apparition */
+    transform: translateY(15px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.help-popup-widget.popup-visible { /* Classe ajoutée par JS */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+.help-popup-header {
+    background-color: var(--a4c-dark-blue); /* Couleur de l'en-tête */
+    color: white;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move; /* Pour indiquer qu'il est déplaçable */
+    border-top-left-radius: 9px; /* Coins arrondis pour l'en-tête */
+    border-top-right-radius: 9px;
+}
+
+.help-popup-header .header-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+.help-popup-header .header-title i {
+    margin-right: 8px;
+    font-size: 1.3rem;
+}
+
+.close-popup-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.7rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.8;
+}
+.close-popup-btn:hover {
+    opacity: 1;
+}
+
+.help-popup-content {
+    padding: 15px;
+    overflow-y: auto; /* Scroll vertical si le contenu dépasse */
+    flex-grow: 1; /* Prend l'espace vertical restant */
+    background-color: #f9f9f9; /* Fond légèrement différent pour le contenu */
+}
+
+.faq-list h4 {
+    color: var(--a4c-dark-blue);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.faq-item {
+    margin-bottom: 8px;
+    border-bottom: 1px solid #e9ecef;
+}
+.faq-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.faq-question-btn {
+    background-color: transparent;
+    border: none;
+    padding: 10px 0;
+    width: 100%;
+    text-align: left;
+    font-weight: 500;
+    color: #343a40; /* Couleur du texte de la question */
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.2s ease;
+}
+.faq-question-btn:hover {
+    color: var(--a4c-teal); /* Couleur au survol */
+}
+.faq-question-btn.active { /* Quand la réponse est visible */
+    color: var(--a4c-teal);
+    font-weight: 600;
+}
+.faq-question-btn i { /* Icône chevron */
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+}
+.faq-question-btn.active i {
+    transform: rotate(180deg); /* Tourner le chevron */
+}
+
+
+.faq-answer {
+    background-color: #fff; /* Fond blanc pour la réponse */
+    padding: 0 10px; /* Padding initial, sera animé */
+    font-size: 0.9rem;
+    color: #495057; /* Couleur du texte de la réponse */
+    max-height: 0; /* Caché par défaut, JS gère l'ouverture */
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out; /* Animation douce */
+    border-left: 3px solid #e0e0e0; /* Petite bordure gauche */
+    margin-left: 2px; /* Léger retrait */
+}
+/* Le JS ajoute le padding quand max-height change pour éviter un saut */
+
+.faq-answer p {
+    margin-bottom: 0.5rem;
+}
+.faq-answer p:last-child {
+    margin-bottom: 0;
+}
+.faq-answer a { /* Style des liens dans la FAQ */
+    color: var(--a4c-dark-blue);
+    font-weight: 500;
+}
+
+.popup-content-divider {
+    margin: 15px 0;
+    border: 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.popup-contact-section p {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: #555;
+    text-align: center;
+}
+.popup-contact-section .button-contact-support {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--a4c-teal);
+    border-color: var(--a4c-teal);
+}
+.popup-contact-section .button-contact-support:hover {
+    background-color: #3ca08a;
+    border-color: #358b78;
+}
+
+/* Assurer que les classes de base des boutons sont disponibles si non définies globalement */
+.button.button-small {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+}
+.button.button-secondary {
+    /* Styles pour button-secondary si pas déjà définis */
+}
+
+/* ... (autres styles pour .faq-question etc. restent les mêmes) ... */
+
+.faq-answer {
+    background-color: #fff;
+    padding: 0 10px; /* Padding horizontal, le padding vertical sera géré par JS pour l'animation */
+    font-size: 0.85rem;
+    color: #555;
+    
+    max-height: 0; /* Caché par défaut, JS gère l'ouverture */
+    overflow: hidden; /* Cache le contenu qui dépasse et la scrollbar si pas nécessaire */
+    transition: max-height 0.35s ease-out, padding 0.35s ease-out; /* Animation douce */
+    
+    border-left: 3px solid #e0e0e0;
+    margin-left: 2px; /* Ajuster pour aligner avec l'icône/bouton de la question */
+    /* padding-left: 10px; (déjà inclus dans le padding: 0 10px;) */
+}
+
+/* Style lorsque la réponse est active/ouverte (le JS mettra le maxHeight) */
+.faq-question.active + .faq-answer {
+    /* Le padding-top et padding-bottom sont gérés par le JS pour l'animation */
+    /* Si le contenu dépasse la hauteur max que vous voulez pour une réponse scrollable : */
+    max-height: 200px; /* Hauteur MAXIMALE pour une réponse avant que le scroll n'apparaisse */
+    overflow-y: auto; /* Activer le scroll vertical SI le contenu dépasse maxHeight */
+}
+
+.faq-answer p {
+    margin-bottom: 0.5rem;
+}
+.faq-answer p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* --- STYLES POUR LE BOUTON FLOTTANT D'AIDE (FAB) --- */
+.floating-help-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--a4c-dark-blue); /* Utilisez vos variables de couleur A4C */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Pour un cercle parfait */
+    font-size: 1.8rem; /* Taille de l'icône à l'intérieur */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050; /* Au-dessus de la plupart des autres éléments */
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease;
+}
+
+.floating-help-button:hover {
+    background-color: var(--a4c-teal); /* Couleur au survol */
+    transform: scale(1.1); /* Léger agrandissement au survol */
+}
+
+/* --- STYLES POUR LE POP-UP FAQ/CHATBOT --- */
+.help-popup-widget {
+    position: fixed;
+    /* Positionnement initial en bas à droite, JS peut le changer si déplaçable */
+    bottom: 95px; /* Un peu au-dessus du FAB */
+    right: 25px;
+    width: 350px; /* Largeur du widget */
+    max-height: 75vh; /* Hauteur maximale, avec scroll si contenu plus long */
+    background-color: #ffffff;
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Ombre plus prononcée */
+    z-index: 1040; /* En dessous du FAB si jamais ils se superposent pendant une animation */
+    display: flex; /* Changé par JS en 'flex' pour afficher */
+    flex-direction: column;
+    overflow: hidden; /* Empêche le contenu de déborder les coins arrondis */
+    border: 1px solid #dee2e6; /* Bordure légère */
+    opacity: 0; /* Pour animation d'apparition */
+    transform: translateY(15px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.help-popup-widget.popup-visible { /* Classe ajoutée par JS */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+.help-popup-header {
+    background-color: var(--a4c-dark-blue); /* Couleur de l'en-tête */
+    color: white;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move; /* Pour indiquer qu'il est déplaçable */
+    border-top-left-radius: 9px; /* Coins arrondis pour l'en-tête */
+    border-top-right-radius: 9px;
+}
+
+.help-popup-header .header-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+.help-popup-header .header-title i {
+    margin-right: 8px;
+    font-size: 1.3rem;
+}
+
+.close-popup-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.7rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.8;
+}
+.close-popup-btn:hover {
+    opacity: 1;
+}
+
+.help-popup-content {
+    padding: 15px;
+    overflow-y: auto; /* Scroll vertical si le contenu dépasse */
+    flex-grow: 1; /* Prend l'espace vertical restant */
+    background-color: #f9f9f9; /* Fond légèrement différent pour le contenu */
+}
+
+.faq-list h4 {
+    color: var(--a4c-dark-blue);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.faq-item {
+    margin-bottom: 8px;
+    border-bottom: 1px solid #e9ecef;
+}
+.faq-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.faq-question-btn {
+    background-color: transparent;
+    border: none;
+    padding: 10px 0;
+    width: 100%;
+    text-align: left;
+    font-weight: 500;
+    color: #343a40; /* Couleur du texte de la question */
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.2s ease;
+}
+.faq-question-btn:hover {
+    color: var(--a4c-teal); /* Couleur au survol */
+}
+.faq-question-btn.active { /* Quand la réponse est visible */
+    color: var(--a4c-teal);
+    font-weight: 600;
+}
+.faq-question-btn i { /* Icône chevron */
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+}
+.faq-question-btn.active i {
+    transform: rotate(180deg); /* Tourner le chevron */
+}
+
+
+.faq-answer {
+    background-color: #fff; /* Fond blanc pour la réponse */
+    padding: 0 10px; /* Padding initial, sera animé */
+    font-size: 0.9rem;
+    color: #495057; /* Couleur du texte de la réponse */
+    max-height: 0; /* Caché par défaut, JS gère l'ouverture */
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out; /* Animation douce */
+    border-left: 3px solid #e0e0e0; /* Petite bordure gauche */
+    margin-left: 2px; /* Léger retrait */
+}
+/* Le JS ajoute le padding quand max-height change pour éviter un saut */
+
+.faq-answer p {
+    margin-bottom: 0.5rem;
+}
+.faq-answer p:last-child {
+    margin-bottom: 0;
+}
+.faq-answer a { /* Style des liens dans la FAQ */
+    color: var(--a4c-dark-blue);
+    font-weight: 500;
+}
+
+.popup-content-divider {
+    margin: 15px 0;
+    border: 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.popup-contact-section p {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: #555;
+    text-align: center;
+}
+.popup-contact-section .button-contact-support {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--a4c-teal);
+    border-color: var(--a4c-teal);
+}
+.popup-contact-section .button-contact-support:hover {
+    background-color: #3ca08a;
+    border-color: #358b78;
+}
+
+/* Assurer que les classes de base des boutons sont disponibles si non définies globalement */
+.button.button-small {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+}
+.button.button-secondary {
+    /* Styles pour button-secondary si pas déjà définis */
+}
+
+/* DANS style.css */
+
+/* ... (vos autres styles .faq-question-btn etc. restent les mêmes) ... */
+
+.faq-answer {
+    background-color: #fff;
+    /* Le padding vertical est maintenant géré par la classe .active via JS et CSS transition, 
+       ou par le padding-top/bottom dans la règle .active ci-dessous */
+    padding: 0 10px 0 20px; /* Padding horizontal, et gauche pour retrait */
+    font-size: 0.85rem;
+    color: #555;
+    
+    max-height: 0; /* Caché par défaut, JS va le changer pour l'animation */
+    overflow: hidden; /* Cache le contenu et la scrollbar si pas nécessaire */
+    /* Transition sur maxHeight et padding pour une ouverture/fermeture en douceur */
+    transition: max-height 0.35s ease-out, padding-top 0.35s ease-out, padding-bottom 0.35s ease-out;
+    
+    border-left: 3px solid #e0e0e0; /* Bordure gauche plus discrète */
+    margin-left: 2px; /* Ajuster pour aligner avec l'icône/bouton de la question */
+}
+
+/* Style lorsque la réponse est active/ouverte */
+/* La classe .active est sur le .faq-question-btn, donc on cible l'élément frère suivant .faq-answer */
+.faq-question-btn.active + .faq-answer {
+    /* Le JS va mettre un maxHeight égal à scrollHeight pour l'animation d'ouverture.
+       Cette règle CSS va ENSUITE limiter la hauteur affichée et ajouter le scroll si nécessaire. */
+    max-height: 200px; /* Hauteur MAXIMALE pour une réponse avant que le scroll n'apparaisse. Ajustez cette valeur. */
+    overflow-y: auto;  /* Activer le scroll vertical SI le contenu dépasse la maxHeight CSS ci-dessus */
+    padding-top: 10px;    /* Ajouter du padding quand c'est ouvert */
+    padding-bottom: 10px;
+}
+
+.faq-answer p {
+    margin-bottom: 0.5rem;
+}
+.faq-answer p:last-child {
+    margin-bottom: 0;
+}
