@@ -590,3 +590,7 @@ def download_message_attachment(message_id):
         return redirect(url_for('main.admin_message_detail', message_id=message_id))
 
 # ... (autres routes admin existantes) ...
+
+@main_bp.route('/a-propos')
+def about_us():
+    return render_template('a_propos.html', title="À Propos d'Act4Community")

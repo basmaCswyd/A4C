@@ -1455,3 +1455,111 @@ textarea.form-control { min-height: 120px; resize: vertical;}
 .message-actions form + .button {
     margin-left: 0.5rem;
 }
+
+/* --- STYLES POUR LA PAGE "À PROPOS" ET SES SECTIONS --- */
+
+/* Pour assurer un scroll fluide vers les ancres (optionnel mais agréable) */
+html {
+    scroll-behavior: smooth;
+}
+
+.about-section, .about-domain-section {
+    padding: 2rem 0; /* Espace vertical pour chaque section */
+    /* border-bottom: 1px solid #eee; */ /* Optionnel: séparateur entre sections */
+}
+.about-section:last-of-type, .about-domain-section:last-of-type {
+    border-bottom: none;
+}
+
+.about-domain-section {
+    display: flex;
+    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur petits écrans */
+    align-items: center; /* Aligner verticalement le texte et l'image */
+    gap: 2rem; /* Espace entre texte et image */
+}
+
+/* Alterner l'ordre image/texte pour la variété visuelle */
+.about-domain-section:nth-child(even) .domain-image { /* Pour que l'image soit à droite sur les sections paires */
+    order: 1; /* L'image vient après le contenu texte sur les sections paires */
+}
+
+.about-domain-section .domain-content {
+    flex: 1; /* Prend l'espace disponible */
+    min-width: 300px; /* Largeur minimale avant de passer à la ligne */
+}
+.about-domain-section .domain-image {
+    flex: 1;
+    min-width: 300px;
+    text-align: center; /* Centrer l'image dans sa colonne */
+}
+
+.about-domain-section h2 {
+    font-size: 1.8rem;
+    color: var(--a4c-teal); /* Utiliser la couleur secondaire pour les titres de domaine */
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+.about-domain-section h2 i {
+    margin-right: 0.75rem;
+    font-size: 2rem; /* Taille des icônes dans les titres de section */
+}
+
+.about-domain-section p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+.about-domain-section ul {
+    list-style: none; /* Ou list-style: disc; si vous préférez des puces */
+    padding-left: 0;
+    margin-bottom: 1rem;
+}
+.about-domain-section ul li {
+    padding-left: 1.5em;
+    position: relative;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+/* Style pour des puces personnalisées (Bootstrap Icons) */
+.about-domain-section ul li::before {
+    content: "\F26A"; /* Icône Bootstrap "check2-circle" ou une autre */
+    font-family: 'bootstrap-icons';
+    position: absolute;
+    left: 0;
+    color: var(--a4c-teal);
+    font-weight: bold;
+}
+
+.about-domain-section .domain-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px; /* Coins arrondis pour les images */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Style pour le lien de la carte dans index.html (pour qu'il n'ait pas de soulignement de lien par défaut) */
+.action-domain-card-link {
+    text-decoration: none;
+    color: inherit; /* Hérite la couleur du texte de la carte */
+    display: block; /* Pour que toute la carte soit cliquable */
+}
+.action-domain-card-link:hover .action-domain-card { /* Appliquer l'effet de survol sur la carte */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustements responsives pour la page "À Propos" */
+@media (max-width: 768px) {
+    .about-domain-section {
+        flex-direction: column; /* Empiler image et texte sur mobile */
+    }
+    .about-domain-section:nth-child(even) .domain-image {
+        order: 0; /* Remettre l'image en premier (ou comme vous préférez) sur mobile */
+    }
+    .about-domain-section .domain-image {
+        margin-bottom: 1.5rem; /* Espace sous l'image sur mobile */
+    }
+}

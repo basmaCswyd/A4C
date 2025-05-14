@@ -59,45 +59,43 @@
             <h2 class="section-title-center">Nos Domaines d'Intervention</h2>
             <p class="section-subtitle-center">Nous focalisons nos efforts sur des axes clés pour un impact maximal.</p>
             
-            <div class="action-domains-grid">
-                
-                <div class="action-domain-card">
-                    <div class="domain-icon-wrapper">
-                        <i class="bi bi-person-workspace"></i> {# Icône pour entrepreneuriat #}
-                    </div>
-                    <h3 class="domain-title">Entrepreneuriat</h3>
-                    <p class="domain-description">Soutenir les entrepreneurs pour un succès durable.</p>
-                    {# <a href="#" class="button button-small button-outline-teal">En savoir plus</a> #}
-                </div>
+            <{# DANS index.html, section "action-domains-grid" #}
 
-                <div class="action-domain-card">
-                    <div class="domain-icon-wrapper">
-                        <i class="bi bi-book-half"></i> {# Icône pour enseignement/éducation #}
-                    </div>
-                    <h3 class="domain-title">Enseignement et Éducation</h3>
-                    <p class="domain-description">Éduquer pour un avenir durable et prospère.</p>
-                    {# <a href="#" class="button button-small button-outline-teal">En savoir plus</a> #}
-                </div>
+<div class="action-domains-grid">
+    
+    <a href="{{ url_for('main.about_us') }}#entrepreneuriat" class="action-domain-card-link">
+        <div class="action-domain-card">
+            <div class="domain-icon-wrapper"><i class="bi bi-person-workspace"></i></div>
+            <h3 class="domain-title">Entrepreneuriat</h3>
+            <p class="domain-description">Soutenir les entrepreneurs pour un succès durable.</p>
+        </div>
+    </a>
 
-                <div class="action-domain-card">
-                    <div class="domain-icon-wrapper">
-                        <i class="bi bi-people"></i> {# Icône pour économie sociale (ou bi-heart-pulse) #}
-                    </div>
-                    <h3 class="domain-title">Économie Sociale et Solidaire</h3>
-                    <p class="domain-description">Coopérer pour un changement positif collectif.</p>
-                    {# <a href="#" class="button button-small button-outline-teal">En savoir plus</a> #}
-                </div>
+    <a href="{{ url_for('main.about_us') }}#education" class="action-domain-card-link">
+        <div class="action-domain-card">
+            <div class="domain-icon-wrapper"><i class="bi bi-book-half"></i></div>
+            <h3 class="domain-title">Enseignement et Éducation</h3>
+            <p class="domain-description">Éduquer pour un avenir durable et prospère.</p>
+        </div>
+    </a>
 
-                <div class="action-domain-card">
-                    <div class="domain-icon-wrapper">
-                        <i class="bi bi-palette-fill"></i> {# Icône pour culture/sport (ou bi-brush, bi-trophy) #}
-                    </div>
-                    <h3 class="domain-title">Culture / Sport</h3>
-                    <p class="domain-description">Accompagner les initiatives culturelles et sportives pour dénicher les talents.</p>
-                    {# <a href="#" class="button button-small button-outline-teal">En savoir plus</a> #}
-                </div>
+    <a href="{{ url_for('main.about_us') }}#economie-sociale" class="action-domain-card-link">
+        <div class="action-domain-card">
+            <div class="domain-icon-wrapper"><i class="bi bi-people"></i></div>
+            <h3 class="domain-title">Économie Sociale et Solidaire</h3>
+            <p class="domain-description">Coopérer pour un changement positif collectif.</p>
+        </div>
+    </a>
 
-            </div> {# Fin action-domains-grid #}
+    <a href="{{ url_for('main.about_us') }}#culture-sport" class="action-domain-card-link">
+        <div class="action-domain-card">
+            <div class="domain-icon-wrapper"><i class="bi bi-palette-fill"></i></div>
+            <h3 class="domain-title">Culture / Sport</h3>
+            <p class="domain-description">Accompagner les initiatives culturelles et sportives pour dénicher les talents.</p>
+        </div>
+    </a>
+
+</div> {# Fin action-domains-grid #}
         </section>
         {# --- FIN NOUVELLE SECTION --- #}
 

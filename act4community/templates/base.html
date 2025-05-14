@@ -31,8 +31,10 @@
                      <li><a href="{{ url_for('main.logout') }}">Déconnexion</a></li>
                      <li class="user-info"><span>({{ current_user.username }})</span></li>
                 {% else %}
+                <li><a href="{{ url_for('main.about_us') }}" class="{{ 'active' if request.endpoint == 'main.about_us' else '' }}">À Propos</a></li>
                     <li><a href="{{ url_for('main.login') }}" class="{{ 'active' if request.endpoint == 'main.login' else '' }}">Connexion</a></li>
                     <li><a href="{{ url_for('main.register') }}" class="{{ 'active' if request.endpoint == 'main.register' else '' }}">S'inscrire</a></li>
+                    
                 {% endif %}
             </ul>
         </nav>

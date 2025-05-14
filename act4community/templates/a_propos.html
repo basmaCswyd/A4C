@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-container">
+    {# Messages Flash si besoin pour cette page #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages-container mb-3">
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <h1 class="page-title">À Propos d'Act4Community</h1>
+    <p class="lead mb-4">
+        Découvrez notre mission, nos valeurs et les domaines clés dans lesquels nous nous investissons 
+        pour le développement des communautés de Khouribga et Safi.
+    </p>
+    <hr class="section-divider">
+
+    {# Section de présentation générale (Optionnelle) #}
+    <section class="about-section" id="presentation">
+        <h2>Notre Mission</h2>
+        <p>Act4Community, une initiative du Groupe OCP, est un acteur engagé dans le développement socio-économique durable. Notre approche repose sur la co-construction avec les acteurs locaux pour identifier les besoins, développer des solutions innovantes et renforcer les capacités des communautés...</p>
+        {# Vous pouvez ajouter plus de texte ou une image ici #}
+    </section>
+    <hr class="section-divider">
+
+    {# --- SECTION POUR L'ENTREPRENEURIAT --- #}
+    <section class="about-domain-section" id="entrepreneuriat">
+        <div class="domain-content">
+            <h2><i class="bi bi-person-workspace"></i> Entrepreneuriat</h2>
+            <p>Safi, ville portuaire et industrielle, possède un potentiel entrepreneurial significatif, notamment grâce à sa jeunesse dynamique et à ses ressources naturelles. Cependant, les défis économiques et le taux de chômage élevé nécessitent des initiatives pour stimuler l'entrepreneuriat local.
+            
+                Act4Community Safi soutient l'entrepreneuriat local en accompagnant les jeunes porteurs de projets. Par exemple, en 2021, 460 jeunes ont été formés, ce qui a conduit à la création de 112 très petites entreprises (TPE), notamment dans les domaines du e-commerce et du recyclage de la ferraille. De plus, des conférences sur l'intelligence artificielle ont été organisées pour aider les entrepreneurs à intégrer les nouvelles technologies dans leurs activités </p>
+                <br>
+                <p> nos objectifs :</p>
+
+            <ul>  
+
+                <li>Incubation de startups locales.</li>
+                <li>Programmes de formation à la gestion d'entreprise.</li>
+                <li>Mise en relation avec des investisseurs et partenaires.</li>
+                <li>Soutien aux initiatives d'économie circulaire.</li>
+            </ul>
+        </div>
+        <div class="domain-image">
+            <img src="{{ url_for('static', filename='images/domain_entrepreneuriat.jpg') }}" alt="Entrepreneuriat Act4Community">
+        </div>
+    </section>
+    <hr class="section-divider">
+
+    {# --- SECTION POUR L'ENSEIGNEMENT ET ÉDUCATION --- #}
+    <section class="about-domain-section" id="education">
+         <div class="domain-image">
+            <img src="{{ url_for('static', filename='images/domain_education.jpg') }}" alt="Éducation Act4Community">
+        </div>
+        <div class="domain-content">
+            <h2><i class="bi bi-book-half"></i> Enseignement et Éducation</h2>
+            <p>L'accès à une éducation de qualité reste un défi dans certaines zones de Safi, en particulier dans les zones rurales. La pandémie de COVID-19 a exacerbé ces difficultés, mettant en évidence la nécessité de solutions d'enseignement à distance.
+
+Act4Community Safi a mis en place des initiatives pour améliorer l'accès à l'enseignement. Par exemple, l'École Al Hayat a été établie pour offrir une éducation préscolaire aux enfants de Douar Ouled El Moudden, une zone rurale avec un accès limité à l'éducation. De plus, des capsules vidéo éducatives sont régulièrement enregistrées en partenariat avec la coopérative Taj Media et le Centre de Compétences Industrielles (CCI) de Safi, contribuant ainsi aux efforts du Ministère de l'Éducation Nationale pour l'enseignement à distance .</p>
+            <br>
+            <p> nos objectifs :</p>
+            <ul>
+                <li>Rénovation et équipement d'établissements scolaires.</li>
+                <li>Programmes de soutien scolaire et de bourses.</li>
+                <li>Initiatives pour l'intégration du numérique dans l'éducation.</li>
+                <li>Développement de filières de formation adaptées aux bassins d'emploi.</li>
+            </ul>
+        </div>
+    </section>
+    <hr class="section-divider">
+
+    {# --- SECTION POUR L'ÉCONOMIE SOCIALE ET SOLIDAIRE --- #}
+    <section class="about-domain-section" id="economie-sociale">
+        <div class="domain-content">
+            <h2><i class="bi bi-people"></i> Économie Sociale et Solidaire</h2>
+            <p>'économie sociale et solidaire joue un rôle crucial dans la création d'emplois et la promotion du développement durable à Safi. Cependant, de nombreuses coopératives locales font face à des défis tels que l'accès au marché et le manque de ressources.
+
+Act4Community Safi intègre l'économie sociale et solidaire dans ses actions en soutenant les coopératives locales. En 2021, 45 coopératives ont été accompagnées, et 17 coopératives agricoles, regroupant 564 fermiers, ont bénéficié d'un appui en formation, équipement et accès aux commandes. De plus, des plateformes d'e-commerce ont été mises en place pour aider les coopératives à commercialiser leurs produits, et des formations techniques et managériales ont été dispensées pour renforcer leurs capacités .</p>
+            <br>
+            <p> nos objectifs :</p>
+             <ul>
+                <li>Accompagnement à la création et à la structuration d'entités de l'ESS.</li>
+                <li>Soutien aux projets d'insertion par l'activité économique.</li>
+                <li>Promotion des produits et services issus de l'ESS.</li>
+                <li>Renforcement des capacités des acteurs de l'ESS.</li>
+            </ul>
+        </div>
+        <div class="domain-image">
+            <img src="{{ url_for('static', filename='images/domain_ess.jpg') }}" alt="Économie Sociale et Solidaire Act4Community">
+        </div>
+    </section>
+    <hr class="section-divider">
+
+    {# --- SECTION POUR CULTURE / SPORT --- #}
+    <section class="about-domain-section" id="culture-sport">
+         <div class="domain-image">
+            <img src="{{ url_for('static', filename='images/domain_culture_sport.jpg') }}" alt="Culture et Sport Act4Community">
+        </div>
+        <div class="domain-content">
+            <h2><i class="bi bi-palette-fill"></i> Culture / Sport</h2>
+            <p>La culture et le sport sont des vecteurs essentiels de cohésion sociale et de développement personnel. À Safi, la richesse culturelle et le dynamisme des jeunes offrent un terreau fertile pour des initiatives dans ces domaines.
+
+Act4Community Safi valorise la culture et le sport comme vecteurs de développement personnel et social. Des initiatives telles que la Safi Pottery Academy, en partenariat avec le Social Innovation Lab, ont été lancées pour promouvoir l'artisanat local. De plus, des ateliers de danse et de théâtre sont proposés pour stimuler l'esprit d'innovation et de création chez les jeunes. En 2025, le concours d'entrepreneuriat culturel "Chemin vers l'Espoir", organisé en partenariat avec l'Alliance Française de Safi, a permis de mettre en lumière des projets allant de la poterie emblématique de Safi à des innovations technologiques dans le domaine de l'IA </p>
+            <br>
+            <p> nos objectifs :</p>
+            <ul>
+                <li>Soutien aux festivals et événements culturels locaux.</li>
+                <li>Aide à la création et à la diffusion artistique.</li>
+                <li>Développement d'infrastructures sportives de proximité.</li>
+                <li>Programmes d'initiation sportive pour les jeunes.</li>
+            </ul>
+        </div>
+    </section>
+
+</div> {# Fin .main-container #}
+{% endblock %}
