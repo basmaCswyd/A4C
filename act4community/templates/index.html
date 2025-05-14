@@ -21,35 +21,86 @@
     #}
 
     {# Le contenu spécifique de index.html vient ici #}
-    <div class="hero-section">
-        <img class="logo" src="{{ url_for('static', filename='images/a4c_logo.png') }}" alt="Act4Community Logo"> 
-        <h1>Bienvenue sur la Plateforme Act4Community</h1>
-        <p>
-            Act4Community, une initiative du Groupe OCP, s'engage pour le développement socio-économique local,
-            particulièrement à **Khouribga et Safi**. Notre mission est de co-construire un avenir durable en soutenant
-            les projets innovants portés par les communautés locales.
-        </p>
-        <p>
-            Cette plateforme vous permet de soumettre vos idées de projets, de suivre leur évaluation par nos équipes,
-            et de contribuer activement au dynamisme de notre territoire. Que vous soyez un porteur de projet, 
-            une association ou un acteur local, votre initiative compte ! Inscrivez-vous ou connectez-vous pour démarrer.
-        </p>
-        <div class="hero-actions">
-            {% if not current_user.is_authenticated %}
-            <a href="{{ url_for('main.login') }}" class="button">Se Connecter</a>
-            <a href="{{ url_for('main.register') }}" class="button button-secondary">S'inscrire</a>
-            {% else %}
-                {% if current_user.role == 'candidat' %}
-                    <a href="{{ url_for('main.submit_project') }}" class="button">Soumettre un Projet</a> 
-                    <a href="{{ url_for('main.my_projects') }}" class="button button-secondary">Voir Mes Projets</a>
-                {% elif current_user.role == 'membre_a4c' %}
-                     <a href="{{ url_for('main.evaluate_projects_list') }}" class="button">Évaluer les Projets</a>
-                     <a href="{{ url_for('main.statistics') }}" class="button button-secondary">Consulter les Stats</a>
-                {% elif current_user.role == 'admin' %}
-                     <a href="{{ url_for('main.admin_dashboard') }}" class="button">Administration</a>
-                     <a href="{{ url_for('main.admin_manage_projects') }}" class="button button-secondary">Gérer les Projets</a>
+    
+
+
+
+    {# Le .main-container est ajouté par le template enfant ici #}
+    <div class="main-container">
+        <div class="hero-section">
+            <img class="logo" src="{{ url_for('static', filename='images/a4c_logo.png') }}" alt="Act4Community Logo"> 
+            <h1>Bienvenue sur la Plateforme Act4Community</h1>
+            <p>
+                Act4Community, une initiative du Groupe OCP, s'engage pour le développement socio-économique local,
+                particulièrement à **Safi**. Notre mission est de co-construire un avenir durable en soutenant
+                les projets innovants portés par les communautés locales.
+            </p>
+            <p>
+                Cette plateforme vous permet de soumettre vos idées de projets, de suivre leur évaluation par nos équipes,
+                et de contribuer activement au dynamisme de notre territoire. Que vous soyez un porteur de projet, 
+                une association ou un acteur local, votre initiative compte ! Inscrivez-vous ou connectez-vous pour démarrer.
+            </p>
+            <div class="hero-actions">
+                {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('main.login') }}" class="button">Se Connecter</a>
+                <a href="{{ url_for('main.register') }}" class="button button-secondary">S'inscrire</a>
+                {% else %}
+                    {# ... (vos boutons pour utilisateurs connectés) ... #}
+                    {% if current_user.role == 'candidat' %}<a href="{{ url_for('main.submit_project') }}" class="button">Soumettre un Projet</a> <a href="{{ url_for('main.my_projects') }}" class="button button-secondary">Voir Mes Projets</a>
+                    {% elif current_user.role == 'membre_a4c' %}<a href="{{ url_for('main.evaluate_projects_list') }}" class="button">Évaluer les Projets</a> <a href="{{ url_for('main.statistics') }}" class="button button-secondary">Consulter les Stats</a>
+                    {% elif current_user.role == 'admin' %}<a href="{{ url_for('main.admin_dashboard') }}" class="button">Administration</a> <a href="{{ url_for('main.admin_manage_projects') }}" class="button button-secondary">Gérer les Projets</a>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
+            </div>
         </div>
-    </div>
+
+        {# --- NOUVELLE SECTION : DOMAINES D'ACTION --- #}
+        <section class="action-domains-section">
+            <h2 class="section-title-center">Nos Domaines d'Intervention</h2>
+            <p class="section-subtitle-center">Nous focalisons nos efforts sur des axes clés pour un impact maximal.</p>
+            
+            <div class="action-domains-grid">
+                
+                <div class="action-domain-card">
+                    <div class="domain-icon-wrapper">
+                        <i class="bi bi-person-workspace"></i> {# Icône pour entrepreneuriat #}
+                    </div>
+                    <h3 class="domain-title">Entrepreneuriat</h3>
+                    <p class="domain-description">Soutenir les entrepreneurs pour un succès durable.</p>
+                    {# <a href="#" class="button button-small button-outline-teal">En savoir plus</a> #}
+                </div>
+
+                <div class="action-domain-card">
+                    <div class="domain-icon-wrapper">
+                        <i class="bi bi-book-half"></i> {# Icône pour enseignement/éducation #}
+                    </div>
+                    <h3 class="domain-title">Enseignement et Éducation</h3>
+                    <p class="domain-description">Éduquer pour un avenir durable et prospère.</p>
+                    {# <a href="#" class="button button-small button-outline-teal">En savoir plus</a> #}
+                </div>
+
+                <div class="action-domain-card">
+                    <div class="domain-icon-wrapper">
+                        <i class="bi bi-people"></i> {# Icône pour économie sociale (ou bi-heart-pulse) #}
+                    </div>
+                    <h3 class="domain-title">Économie Sociale et Solidaire</h3>
+                    <p class="domain-description">Coopérer pour un changement positif collectif.</p>
+                    {# <a href="#" class="button button-small button-outline-teal">En savoir plus</a> #}
+                </div>
+
+                <div class="action-domain-card">
+                    <div class="domain-icon-wrapper">
+                        <i class="bi bi-palette-fill"></i> {# Icône pour culture/sport (ou bi-brush, bi-trophy) #}
+                    </div>
+                    <h3 class="domain-title">Culture / Sport</h3>
+                    <p class="domain-description">Accompagner les initiatives culturelles et sportives pour dénicher les talents.</p>
+                    {# <a href="#" class="button button-small button-outline-teal">En savoir plus</a> #}
+                </div>
+
+            </div> {# Fin action-domains-grid #}
+        </section>
+        {# --- FIN NOUVELLE SECTION --- #}
+
+        </div> {# Fin de .main-container #}
+   
 {% endblock %}
