@@ -1364,3 +1364,94 @@ textarea.form-control { min-height: 120px; resize: vertical;}
     background-color: var(--a4c-teal);
     color: #fff;
 }
+
+
+/* DANS style.css */
+
+/* ... (tous vos styles existants) ... */
+
+/* Styles pour la pagination (simple) */
+.pagination { display: flex; padding-left: 0; list-style: none; border-radius: 0.25rem; }
+.page-item { }
+.page-item.disabled .page-link { color: #6c757d; pointer-events: none; background-color: #fff; border-color: #dee2e6; }
+.page-item.active .page-link { z-index: 3; color: #fff; background-color: var(--a4c-dark-blue); border-color: var(--a4c-dark-blue); }
+.page-link { position: relative; display: block; padding: 0.5rem 0.75rem; margin-left: -1px; line-height: 1.25; color: var(--a4c-teal); background-color: #fff; border: 1px solid #dee2e6; }
+.page-link:hover { z-index: 2; color: #3ca08a; text-decoration: none; background-color: #e9ecef; border-color: #dee2e6; }
+.page-item:first-child .page-link { margin-left: 0; border-top-left-radius: 0.25rem; border-bottom-left-radius: 0.25rem; }
+.page-item:last-child .page-link { border-top-right-radius: 0.25rem; border-bottom-right-radius: 0.25rem; }
+
+/* Styles pour la liste des messages admin */
+.table-active-custom { /* Pour mettre en évidence les messages non lus */
+    background-color: #e9f7f4 !important; /* Un vert très clair, !important pour surcharger nth-child */
+}
+.text-muted-custom td { /* Pour rendre le texte des messages lus un peu plus discret */
+    color: #6c757d;
+}
+.text-muted-custom strong {
+    font-weight: normal; /* Enlever le gras si lu */
+}
+
+/* Styles pour la page de détail d'un message admin */
+.message-detail-card {
+    background-color: #fff;
+    border: 1px solid #e0e6ed;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-top: 1rem;
+}
+.message-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e0e6ed;
+    background-color: #f8f9fc;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.message-header h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    color: var(--a4c-dark-blue);
+}
+.message-meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+.message-body-content {
+    padding: 1.5rem;
+}
+.message-body-content h4 {
+    font-size: 1.1rem;
+    color: #495057;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+.message-text {
+    background-color: #fdfdfd;
+    padding: 1rem;
+    border-radius: 4px;
+    border: 1px solid #eee;
+    min-height: 100px;
+    white-space: pre-line; /* Respecte les sauts de ligne du message */
+}
+.message-attachment-section {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+}
+.message-attachment-section h4 {
+    font-size: 1.1rem;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+.message-actions {
+    padding: 1.5rem;
+    border-top: 1px solid #e0e6ed;
+    background-color: #f8f9fc;
+    text-align: right;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.message-actions .button + .button,
+.message-actions .button + form,
+.message-actions form + .button {
+    margin-left: 0.5rem;
+}

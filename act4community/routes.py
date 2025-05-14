@@ -4,13 +4,15 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.utils import secure_filename
 from functools import wraps
 from weasyprint import HTML, CSS # Pour la génération de PDF
+from flask_mail import Message as MailMessage
 
 from act4community import db, login_manager 
-from act4community.models import User, Project, Document, Evaluation
+from act4community.models import User, Project, Document, Evaluation, MessageContact
+from datetime import datetime
 from act4community.forms import (
     RegistrationForm, LoginForm, 
     ProjectSubmissionForm, EvaluationForm, 
-    SetAppointmentForm # Importer le nouveau formulaire
+    SetAppointmentForm, ContactForm # Importer le nouveau formulaire
 )
 
 
@@ -435,3 +437,156 @@ def delete_user(user_id):
         current_app.logger.error(f"Erreur suppression utilisateur {user_id}: {e}")
         flash(f"Erreur lors de la suppression de l'utilisateur. Consultez les logs.", "danger")
     return redirect(url_for('main.manage_users'))
+
+
+
+    # DANS act4community/routes.py
+
+# ... (routes existantes) ...
+
+# --- PAGE DE CONTACT POUR LES UTILISATEURS ---
+@main_bp.route('/contact', methods=['GET', 'POST'])
+def contact_us():
+    form = ContactForm()
+    if current_user.is_authenticated and request.method == 'GET':
+        # Pré-remplir le nom et l'email si l'utilisateur est connecté
+        form.name.data = current_user.username 
+        form.email.data = current_user.email
+
+    if form.validate_on_submit():
+        attachment_filename = None
+        attachment_filepath_db = None
+
+        file = form.attachment.data
+        if file and allowed_file(file.filename): # Réutiliser la fonction allowed_file pour les extensions
+            # Créer un dossier 'contact_attachments' dans UPLOAD_FOLDER s'il n'existe pas
+            contact_upload_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], 'contact_attachments')
+            os.makedirs(contact_upload_dir, exist_ok=True)
+            
+            original_filename = secure_filename(file.filename)
+            # Pour éviter les collisions, on peut préfixer avec un timestamp ou UUID
+            timestamp_prefix = datetime.utcnow().strftime('%Y%m%d%H%M%S%f_')
+            filename_on_disk = timestamp_prefix + original_filename
+            
+            filepath_on_disk_full = os.path.join(contact_upload_dir, filename_on_disk)
+            file.save(filepath_on_disk_full)
+            
+            attachment_filename = original_filename # Nom original pour affichage
+            attachment_filepath_db = os.path.join('contact_attachments', filename_on_disk).replace("\\", "/") # Chemin relatif à UPLOAD_FOLDER
+
+        new_message = MessageContact(
+            name=form.name.data,
+            email=form.email.data,
+            subject=form.subject.data,
+            message_body=form.message_body.data,
+            attachment_filename=attachment_filename,
+            attachment_filepath=attachment_filepath_db,
+            user_id=current_user.id if current_user.is_authenticated else None
+        )
+        db.session.add(new_message)
+        try:
+            db.session.commit()
+            
+            # Optionnel : Envoyer un email de confirmation à l'utilisateur
+            # if current_app.config.get('MAIL_SERVER'): # Vérifier si mail est configuré
+            #     try:
+            #         msg_to_user = MailMessage(
+            #             subject="Confirmation de réception de votre message - Act4Community",
+            #             sender=current_app.config['MAIL_DEFAULT_SENDER'],
+            #             recipients=[new_message.email]
+            #         )
+            #         msg_to_user.html = render_template(
+            #             'email/contact_confirmation_user.html', 
+            #             name=new_message.name, 
+            #             message_subject=new_message.subject
+            #         )
+            #         mail.send(msg_to_user)
+            #     except Exception as e_mail:
+            #         current_app.logger.error(f"Erreur envoi email confirmation contact: {e_mail}")
+            #         flash("Votre message a été envoyé, mais nous n'avons pas pu envoyer d'email de confirmation.", "warning")
+
+            # Optionnel : Envoyer une notification à l'admin
+            # if current_app.config.get('ADMIN_EMAIL') and current_app.config.get('MAIL_SERVER'):
+            #    try:
+            #        msg_to_admin = MailMessage(
+            #            subject=f"Nouveau Message Contact: {new_message.subject}",
+            #            sender=current_app.config['MAIL_DEFAULT_SENDER'],
+            #            recipients=[current_app.config['ADMIN_EMAIL']]
+            #        )
+            #        # Créez un template email/new_contact_message_admin.html si besoin
+            #        msg_to_admin.body = f"Nouveau message de {new_message.name} ({new_message.email}).\nObjet: {new_message.subject}\nMessage:\n{new_message.message_body}"
+            #        mail.send(msg_to_admin)
+            #    except Exception as e_mail_admin:
+            #        current_app.logger.error(f"Erreur envoi email notif admin contact: {e_mail_admin}")
+
+            flash("Votre message a été envoyé avec succès ! Nous vous répondrons dès que possible.", "success")
+            return redirect(url_for('main.index')) # Ou une page de remerciement
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(f"Erreur sauvegarde message contact: {e}")
+            flash(f"Erreur lors de l'envoi du message : {e}. Veuillez réessayer.", "danger")
+            
+    return render_template('contact.html', title="Contactez-nous", form=form)
+
+# --- MESSAGERIE ADMIN ---
+@main_bp.route('/admin/messages')
+@login_required
+@role_required('admin')
+def admin_messages_list():
+    page = request.args.get('page', 1, type=int)
+    # Trier par non lus en premier, puis par date
+    messages = MessageContact.query.order_by(MessageContact.is_read_by_admin.asc(), MessageContact.timestamp.desc()).paginate(page=page, per_page=15)
+    return render_template('admin/messages_list.html', title="Messagerie Reçue", messages_pagination=messages)
+
+@main_bp.route('/admin/message/<int:message_id>', methods=['GET', 'POST']) # POST pour marquer comme lu/non lu
+@login_required
+@role_required('admin')
+def admin_message_detail(message_id):
+    message = MessageContact.query.get_or_404(message_id)
+    
+    if request.method == 'POST': # Pourrait être utilisé pour marquer comme lu/non lu
+        if 'mark_read' in request.form:
+            message.is_read_by_admin = True
+            flash("Message marqué comme lu.", "info")
+        elif 'mark_unread' in request.form:
+            message.is_read_by_admin = False
+            flash("Message marqué comme non lu.", "info")
+        db.session.commit()
+        return redirect(url_for('main.admin_message_detail', message_id=message.id))
+
+    # Marquer automatiquement comme lu lors de la visualisation (sauf si déjà traité par un bouton)
+    if not message.is_read_by_admin and request.method == 'GET':
+        message.is_read_by_admin = True
+        db.session.commit()
+        
+    return render_template('admin/message_detail.html', title=f"Message de {message.name}", message=message)
+
+# --- Route pour télécharger la pièce jointe d'un message contact ---
+@main_bp.route('/admin/message_attachment/<int:message_id>')
+@login_required
+@role_required('admin')
+def download_message_attachment(message_id):
+    message = MessageContact.query.get_or_404(message_id)
+    if message.attachment_filepath:
+        # Le chemin stocké est relatif à UPLOAD_FOLDER (ex: contact_attachments/fichier.pdf)
+        directory = os.path.abspath(current_app.config['UPLOAD_FOLDER'])
+        
+        # Sécurité : valider que le chemin est bien dans UPLOAD_FOLDER
+        safe_filepath = secure_filename(message.attachment_filepath.replace("\\", "/"))
+        full_path = os.path.abspath(os.path.join(directory, safe_filepath))
+        if not full_path.startswith(directory):
+             flash("Tentative d'accès à un fichier invalide.", "danger")
+             current_app.logger.warning(f"Tentative de Path Traversal (message attachment): user {current_user.id}, path {safe_filepath}")
+             return redirect(url_for('main.admin_messages_list'))
+             
+        return send_from_directory(
+            directory, 
+            safe_filepath, 
+            as_attachment=True, # Forcer le téléchargement
+            download_name=message.attachment_filename # Utiliser le nom original pour le téléchargement
+        )
+    else:
+        flash("Ce message n'a pas de pièce jointe.", "warning")
+        return redirect(url_for('main.admin_message_detail', message_id=message_id))
+
+# ... (autres routes admin existantes) ...

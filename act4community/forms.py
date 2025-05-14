@@ -4,6 +4,7 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationE
 from flask_wtf.file import FileAllowed
 from act4community.models import User # Assurez-vous que l'import est correct
 from wtforms import DateTimeLocalField
+from flask_wtf.file import FileField, FileAllowed # Assurez-vous que FileAllowed est bien importé
 
 class RegistrationForm(FlaskForm):
     username = StringField('Nom d\'utilisateur', validators=[DataRequired(), Length(min=4, max=80)])
@@ -69,3 +70,22 @@ class SetAppointmentForm(FlaskForm):
         default="Veuillez apporter une copie de votre pièce d'identité, tout document original pertinent à votre projet, ainsi que cette fiche de convocation imprimée qui est OBLIGATOIRE pour l'entretien."
     )
     submit = SubmitField('Enregistrer le Rendez-vous et Générer la Convocation')
+
+
+    # DANS act4community/forms.py
+# ... (autres imports existants) ...
+
+
+# ... (RegistrationForm, LoginForm, ProjectSubmissionForm, EvaluationForm, SetAppointmentForm restent identiques) ...
+
+class ContactForm(FlaskForm):
+    name = StringField('Votre Nom', validators=[DataRequired("Veuillez entrer votre nom.")])
+    email = StringField('Votre Email', validators=[DataRequired("Veuillez entrer votre adresse email."), Email("Adresse email invalide.")])
+    subject = StringField('Objet du Message', validators=[DataRequired("Veuillez entrer un objet."), Length(max=200)])
+    message_body = TextAreaField('Votre Message', validators=[DataRequired("Veuillez écrire votre message.")], render_kw={'rows': 7})
+    attachment = FileField('Pièce Jointe (Optionnel)', validators=[
+        Optional(),
+        FileAllowed(['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'txt'], 
+                    'Formats autorisés : Images (jpg, png), PDF, Documents (doc, docx), Texte (txt)')
+    ])
+    submit = SubmitField('Envoyer le Message')

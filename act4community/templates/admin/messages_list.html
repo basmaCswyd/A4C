@@ -1,0 +1,100 @@
+{% extends "admin/admin_base.html" %} {# Ou "base.html" si vous n'utilisez pas admin_base.html #}
+
+{% block admin_content %} {# Ou block content si hérite de base.html #}
+    {# <h1 class="admin-title"><i class="bi bi-envelope-paper-fill"></i> Messagerie Reçue</h1> #}
+    {# Le titre est géré par admin_base.html via la variable 'title' #}
+    <p class="lead mb-3">Liste des messages reçus via le formulaire de contact.</p>
+
+    {% if messages_pagination.items %}
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover styled-table align-middle">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">Lu</th>
+                        <th style="width: 20%;">Expéditeur</th>
+                        <th style="width: 30%;">Objet</th>
+                        <th style="width: 20%;">Date Réception</th>
+                        <th style="width: 10%; text-align: center;">Pièce Jointe</th>
+                        <th style="width: 15%; text-align: center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages_pagination.items %}
+                    <tr class="{{ 'fw-bold table-active-custom' if not message.is_read_by_admin else 'text-muted-custom' }}"> {# Style pour non lus #}
+                        <td class="text-center">
+                            {% if not message.is_read_by_admin %}
+                                <i class="bi bi-envelope-fill text-primary" title="Non lu"></i>
+                            {% else %}
+                                <i class="bi bi-envelope-open" title="Lu"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong>{{ message.name }}</strong><br>
+                            <small>{{ message.email }}</small>
+                            {% if message.sender %}
+                                <br><small class="text-info">(Utilisateur: {{ message.sender.username }})</small>
+                            {% endif %}
+                        </td>
+                        <td>{{ message.subject | truncate(60) }}</td>
+                        <td>{{ message.timestamp.strftime('%d %b %Y à %H:%M') }}</td>
+                        <td class="text-center">
+                            {% if message.attachment_filename %}
+                                <a href="{{ url_for('main.download_message_attachment', message_id=message.id) }}" 
+                                   class="button button-small button-outline-secondary" 
+                                   title="Télécharger : {{ message.attachment_filename }}">
+                                    <i class="bi bi-paperclip"></i>
+                                </a>
+                            {% else %}
+                                --
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ url_for('main.admin_message_detail', message_id=message.id) }}" 
+                               class="button button-small button-primary-outline">
+                                <i class="bi bi-eye-fill"></i> Voir
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# Pagination #}
+    {% if messages_pagination.pages > 1 %}
+    <nav aria-label="Page navigation messages" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {# Bouton Précédent #}
+            <li class="page-item {% if not messages_pagination.has_prev %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('main.admin_messages_list', page=messages_pagination.prev_num if messages_pagination.has_prev else '#') }}" aria-label="Précédent">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            {# Liens des pages #}
+            {% for page_num in messages_pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                    <li class="page-item {% if page_num == messages_pagination.page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('main.admin_messages_list', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+            {# Bouton Suivant #}
+            <li class="page-item {% if not messages_pagination.has_next %}disabled{% endif %}">
+                <a class="page-link" href="{{ url_for('main.admin_messages_list', page=messages_pagination.next_num if messages_pagination.has_next else '#') }}" aria-label="Suivant">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="no-data-message">
+        <i class="bi bi-envelope-open"></i> Aucun message reçu pour le moment.
+    </div>
+    {% endif %}
+{% endblock %}

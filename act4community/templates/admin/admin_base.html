@@ -45,6 +45,13 @@
                             <span>Statistiques</span>
                         </a>
                     </li>
+
+                    <li class="{{ 'active' if 'message' in request.endpoint else '' }}"> {# Met en surbrillance si messages_list ou message_detail #}
+            <a href="{{ url_for('main.admin_messages_list') }}">
+                <i class="bi bi-envelope-paper-fill"></i>
+                <span>Messagerie</span> {# NOUVEAU LIEN #}
+            </a>
+        </li>
                 </ul>
             </nav>
             <div class="sidebar-footer">

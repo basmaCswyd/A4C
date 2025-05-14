@@ -2,6 +2,8 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from act4community import db # Import 'db' depuis __init__.py
+from datetime import datetime # Assurez-vous que datetime est importé
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -71,3 +73,28 @@ class Evaluation(db.Model):
 
     def __repr__(self):
         return f'<Evaluation for Project {self.project_id} by User {self.evaluator_id}>'
+
+
+# DANS act4community/models.py
+# ... (User, Project, Document, Evaluation restent identiques) ...
+
+
+class MessageContact(db.Model):
+    __tablename__ = 'message_contact'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), nullable=False) # Nom de l'expéditeur
+    email = db.Column(db.String(150), nullable=False) # Email de l'expéditeur
+    subject = db.Column(db.String(200), nullable=False)
+    message_body = db.Column(db.Text, nullable=False)
+    attachment_filename = db.Column(db.String(250), nullable=True) # Nom du fichier original
+    attachment_filepath = db.Column(db.String(300), nullable=True) # Chemin vers le fichier stocké
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True) # Lié à un user si connecté
+    is_read_by_admin = db.Column(db.Boolean, default=False, nullable=False)
+
+    # Relation si vous voulez accéder à l'utilisateur depuis le message
+    # backref est optionnel si vous n'avez pas besoin de user.contact_messages_sent
+    sender = db.relationship('User', backref='sent_contact_messages') 
+
+    def __repr__(self):
+        return f'<MessageContact {self.id} de {self.email} - Objet: {self.subject[:30]}>'

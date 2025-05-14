@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-container"> {# Assurer que cette page utilise le conteneur principal #}
+    <h1 class="page-title">Contactez-nous</h1>
+    <p class="lead mb-4">
+        Vous avez une question, une suggestion, ou besoin d'assistance ? Utilisez le formulaire ci-dessous pour nous envoyer un message.
+        Notre équipe s'efforcera de vous répondre dans les plus brefs délais.
+    </p>
+    <hr class="section-divider">
+
+    {# Affichage des messages Flash spécifiques à cette page (si le formulaire est soumis) #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages-container mb-3">
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category if category in ['success', 'danger', 'warning', 'info'] else 'info' }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="form-container" style="max-width: 700px; margin: 0 auto;"> {# Limiter la largeur du formulaire #}
+        <form method="POST" action="{{ url_for('main.contact_us') }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.name.label(class="form-label fw-bold") }}
+                {{ form.name(class="form-control form-control-lg" + (" is-invalid" if form.name.errors else ""), placeholder="Votre nom complet") }}
+                {% if form.name.errors %}
+                    <div class="form-error">{% for error in form.name.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.email.label(class="form-label fw-bold") }}
+                {{ form.email(class="form-control form-control-lg" + (" is-invalid" if form.email.errors else ""), placeholder="votre.email@example.com") }}
+                {% if form.email.errors %}
+                    <div class="form-error">{% for error in form.email.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.subject.label(class="form-label fw-bold") }}
+                {{ form.subject(class="form-control form-control-lg" + (" is-invalid" if form.subject.errors else ""), placeholder="Objet de votre message") }}
+                {% if form.subject.errors %}
+                    <div class="form-error">{% for error in form.subject.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.message_body.label(class="form-label fw-bold") }}
+                {{ form.message_body(class="form-control" + (" is-invalid" if form.message_body.errors else ""), placeholder="Écrivez votre message ici...") }}
+                {% if form.message_body.errors %}
+                    <div class="form-error">{% for error in form.message_body.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.attachment.label(class="form-label") }}
+                {{ form.attachment(class="form-control" + (" is-invalid" if form.attachment.errors else "")) }}
+                <div class="form-text">Formats autorisés : Images (jpg, png), PDF, Documents (doc, docx), Texte (txt). Taille max : [définir une limite] Mo.</div>
+                {% if form.attachment.errors %}
+                    <div class="form-error">{% for error in form.attachment.errors %}{{ error }}{% endfor %}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions text-center mt-4">
+                {{ form.submit(class="button button-success button-lg") }} {# Bouton vert pour envoyer #}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

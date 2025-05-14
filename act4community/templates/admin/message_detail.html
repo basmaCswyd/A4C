@@ -1,0 +1,58 @@
+{% extends "admin/admin_base.html" %} {# Ou "base.html" #}
+
+{% block admin_content %} {# Ou block content #}
+    {# <h1 class="admin-title"><i class="bi bi-envelope-open-fill"></i> Message Détaillé</h1> #}
+    
+    <div class="message-detail-card">
+        <div class="message-header">
+            <h3>Objet : {{ message.subject }}</h3>
+            <p class="message-meta">
+                De : <strong>{{ message.name }}</strong> <{{ message.email }}>
+                {% if message.sender %}(Utilisateur: {{ message.sender.username }}){% endif %}<br>
+                Reçu le : {{ message.timestamp.strftime('%d %B %Y à %H:%M') }}
+            </p>
+        </div>
+
+        <div class="message-body-content">
+            <h4>Contenu du Message :</h4>
+            <div class="message-text preserve-whitespace">
+                {{ message.message_body }}
+            </div>
+        </div>
+
+        {% if message.attachment_filename %}
+        <div class="message-attachment-section">
+            <h4>Pièce Jointe :</h4>
+            <a href="{{ url_for('main.download_message_attachment', message_id=message.id) }}" 
+               class="button button-outline-secondary button-small" 
+               title="Télécharger : {{ message.attachment_filename }}">
+                <i class="bi bi-download"></i> {{ message.attachment_filename }}
+            </a>
+        </div>
+        {% endif %}
+
+        <hr class="section-divider">
+
+        <div class="message-actions">
+            <a href="{{ url_for('main.admin_messages_list') }}" class="button button-secondary">
+                <i class="bi bi-arrow-left-circle"></i> Retour à la liste
+            </a>
+            {# Bouton pour marquer comme non lu/lu #}
+            <form method="POST" action="{{ url_for('main.admin_message_detail', message_id=message.id) }}" style="display: inline-block; margin-left: 10px;">
+                {% if message.is_read_by_admin %}
+                    <button type="submit" name="mark_unread" class="button button-small button-outline-secondary">
+                        <i class="bi bi-envelope-slash"></i> Marquer Non Lu
+                    </button>
+                {% else %}
+                     <button type="submit" name="mark_read" class="button button-small button-outline-primary">
+                        <i class="bi bi-envelope-check"></i> Marquer Lu
+                    </button>
+                {% endif %}
+            </form>
+            {# Lien pour répondre par email directement #}
+            <a href="mailto:{{ message.email }}?subject=RE: {{ message.subject }}" class="button button-success button-small" style="margin-left: 10px;">
+                <i class="bi bi-reply-fill"></i> Répondre par Email
+            </a>
+        </div>
+    </div>
+{% endblock %}
